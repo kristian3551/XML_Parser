@@ -88,6 +88,7 @@ void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const Xml
 }
 
 void XmlParser::parseTree(XmlTree& tree) const {
+    if(fileContent.getLength() <= 1) return;
     parse(fileContent.substring(1), tree, tree.getRoot());
     iter = 0;
 }

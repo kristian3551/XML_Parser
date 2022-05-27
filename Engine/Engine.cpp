@@ -65,30 +65,71 @@ void Engine::print() {
 }
 void Engine::printAttribute(const String& id,
     const String& key) {
-        tree.printAttribute(id, key);
-    cout << endl;
+    try {
+        bool res = tree.printAttribute(id, key);
+        if(!res) cout << "There is no such attribute to element " << id << endl;
+        cout << endl;
+    }
+    catch(const String& str) {
+        cout << str << endl;
+    }
 }
 void Engine::setAttribute(const String& id, const String& key,
     const String& value) {
+    try {
         tree.setAttribute(id, key, value);
+    }
+    catch(const String& str) {
+        cout << str << endl;
+        return;
+    }
+    
     cout << "Successfully set attribute " << key << " to " << value << endl;
 }
 void Engine::printChildren(const String& id) {
-    tree.printChildren(id);
+    try {
+        tree.printChildren(id);
+    }
+    catch(const String& str) {
+        cout << str << endl;
+    }
 }
 void Engine::printChildByIndex(const String& id, int index) {
-    tree.getChildByIndex(id, index)->print(cout);
+    try {
+        const XmlElement* el = tree.getChildByIndex(id, index);
+        el->print(cout);
+    }
+    catch(const String& str) {
+        cout << str << endl;
+    }
 }
 void Engine::printText(const String& id) {
-    cout << tree.getElement(id)->getText() << endl;
+    XmlElement* el = tree.getElement(id);
+    if(el == nullptr) {
+        cout << "There is no such element" << endl;
+        return;
+    }
+    cout << el->getText() << endl;
 }
 void Engine::removeAttribute(const String& id, const String& key) {
-    tree.deleteAttribute(id, key);
-    cout << "Successfully removed attribute to an XML element" << endl;
+    try {
+        bool res = tree.deleteAttribute(id, key);
+        if(res) cout << "Successfully removed attribute to an XML element" << endl;
+        else cout << "Attribute removed unsuccessfully" << endl;
+    }
+    catch(const String& str) {
+        cout << str << endl;
+    }
 }
 void Engine::addChild(const String& id, const String& type, const String& textContent) {
     XmlElement el(type, "dId", textContent);
-    tree.addChild(id, el);
+    try {
+        tree.addChild(id, el);
+    }
+    catch(const String& str) {
+        cout << str << endl;
+        return;
+    }
     cout << "Successfully added child." << endl;
 }
 void Engine::removeElement(const String& parentId, const String& childId) {
@@ -162,7 +203,7 @@ void Engine::run() {
         }
         catch(int value)
         {
-            cout << "Something went wrong!" << endl;
+            cout << "Input error!" << endl;
         }
         
         printDelimiter();
