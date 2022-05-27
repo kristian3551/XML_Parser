@@ -48,7 +48,7 @@ const String& key, const String& value) {
 void XmlTree::printChildren(const String& id) const {
     XmlElement* el = getElementById(id, root);
     if(el == nullptr) return;
-    if(el->getChildren().getSize()) {
+    if(el->getChildren().getSize() == 0) {
         cout << "There are no children of node with id " << id << endl;
     }
     for(int i = 0; i < el->getChildren().getSize(); i++) {

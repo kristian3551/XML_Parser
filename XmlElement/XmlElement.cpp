@@ -11,7 +11,8 @@ XmlElement::XmlElement(const String& type, const String& id,
 bool XmlElement::addChild(const String& type, const String& id,
 const String& textContent) {
     XmlElement* child = new XmlElement(type, id, textContent);
-    return this->children.push(child);
+    this->children.push(child);
+    return true;
 }
 bool XmlElement::addChild(const XmlElement& el) {
     XmlElement* child = new XmlElement(el.type, el.id, el.textContent);
@@ -73,16 +74,16 @@ void XmlElement::print(std::ostream& os, int k) const {
         << "\"" << attributes.getPairs()[i].second << "\"";
     }
     os << ">";
-    if(textContent != "defaultContent") os << textContent << "</" << type << ">" << endl;
-    else {
-        os << endl;
-        for(int i = 0; i < children.getSize(); i++) {
-            children[i]->print(os, k + 1);
-        }
-        for(int i = 0; i < k; i++)
-            os << "\t";
-        os << "</" << type << ">" << endl;
+    if(textContent != "defaultContent") {
+        os << textContent;
     }
+    if(!this->children.isEmpty()) os << endl;
+    for(int i = 0; i < this->children.getSize(); i++) {
+        this->children[i]->print(os, k + 1);
+    }
+    if(!this->children.isEmpty()) for(int i = 0; i < k; i++)
+        os << "\t";
+    os << "</" << type << ">" << endl;
 }
 
 const Dictionary<String, String>& XmlElement::getAttributes() const {
