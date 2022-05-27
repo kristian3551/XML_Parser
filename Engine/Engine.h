@@ -21,7 +21,7 @@ class Engine {
     void printChildByIndex(const String& id, int index);
     void printText(const String& id);
     void removeAttribute(const String& id, const String& key);
-    void addChild(const String& id, const String& type = "default", const String& textContent = String());
+    void addChild(const String& id, const String& type = "default", const String& textContent = "defaultContent");
     void removeElement(const String& parentId, const String& childId);
 public:
     void run();
