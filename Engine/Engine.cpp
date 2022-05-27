@@ -47,7 +47,18 @@ void Engine::saveAs(const String& filePath) {
     cout << "Successfully saved file in " << parser.getFilePath() << endl;
 }
 void Engine::help() {
-    cout << "Some help for you!" << endl;
+    cout << "The following commands are supported: " << endl;
+    cout << "open <fileName>       \t\t\topens <fileName>" << endl;
+    cout << "close                 \t\t\tcloses currently opened file" << endl;
+    cout << "save                  \t\t\tsaves the currently open file" << endl;
+    cout << "saveas <fileName>     \t\t\tsaves the currently open file in <fileName>" << endl;
+    cout << "help                  \t\t\tprints this information" << endl;
+    cout << "exit                  \t\t\texits the program" << endl;
+    cout << "print                 \t\t\tprints the opened file" << endl;
+    cout << "select <id> <key>     \t\t\tprints attribute to an element with <id> by key" << endl;
+    cout << "set <id> <key> <value>\t\t\tsets attribute to an element with <id> by key and value" << endl;
+    cout << "children <id>         \t\t\topens file" << endl;
+    cout << "child <id> <n>        \t\t\tprints the n-th child of an element with <id>" << endl;
 }
 bool Engine::exit() {
     if(parser.getFilePath() != String()) {
@@ -104,7 +115,7 @@ void Engine::printChildByIndex(const String& id, int index) {
     }
 }
 void Engine::printText(const String& id) {
-    XmlElement* el = tree.getElement(id);
+    const XmlElement* el = tree.getElement(id);
     if(el == nullptr) {
         cout << "There is no such element" << endl;
         return;
@@ -138,7 +149,7 @@ void Engine::removeElement(const String& parentId, const String& childId) {
     else cout << "Child removed unsuccessfully!" << endl;
 }
 void Engine::run() {
-    cout << "Welcome to XML Parser app. To continue, please enter a command or type \"\" help for more information." << endl;
+    cout << "Welcome to XML Parser app. To continue, please enter a command or type \"help\" for more information." << endl;
     String input;
     while(input != END_OF_PROGRAM) {
         cout << "> ";

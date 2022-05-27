@@ -27,7 +27,7 @@ public:
     void changeTextContent(const String& id, const String& textContent);
     bool deleteAttribute(const String& id, const String& key);
     void addChild(const String& id, const XmlElement& el);
-    XmlElement* getElement(const String& id) const;
+    const XmlElement* getElement(const String& id) const;
     bool removeChild(const String&, const String&);
     void clear();
 };

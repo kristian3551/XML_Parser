@@ -7,7 +7,7 @@ XmlTree::XmlTree(const XmlElement& root) {
     this->root = new XmlElement(root);
 }
 XmlTree::XmlTree() {
-    this->root = new XmlElement("tempWrapper", "rootId");
+    this->root = new XmlElement("wrapper", "rootId");
 }
 XmlTree::~XmlTree() {
     freeElement(root);
@@ -98,14 +98,14 @@ void XmlTree::addChild(const String& id, const XmlElement& el) {
     parent->addChild(el.getType(), idToBeAdded, el.getText());
     
     for(int i = 0; i < el.getAttributes().getSize(); i++) {
-        getElement(idToBeAdded)->setAttribute(
+        getElementById(idToBeAdded, root)->setAttribute(
             el.getAttributes().getPairs()[i].first, el.getAttributes().getPairs()[i].second 
         );
     }
     ids.add(idToBeAdded, parent->getChildren()[parent->getChildren().getSize() - 1]);
 }
 
-XmlElement* XmlTree::getElement(const String& id) const {
+const XmlElement* XmlTree::getElement(const String& id) const {
     return getElementById(id, root);
 }
 void XmlTree::clear() {
@@ -116,7 +116,7 @@ void XmlTree::clear() {
 }
 
 bool XmlTree::removeChild(const String& parentId, const String& childId) {
-    XmlElement* el = getElement(parentId);
+    XmlElement* el = getElementById(parentId, root);
     if(el == nullptr) return false;
     return el->removeChild(childId);
 }
