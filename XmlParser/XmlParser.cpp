@@ -4,28 +4,23 @@
 using namespace std;
 
 XmlParser::XmlParser(const String& filePath) {
-    ifstream file(filePath.toString());
-    if(!file.is_open()) {
-        return;
-    }
-    while(!file.eof()) {
-        if(file.peek() != '\t' && file.peek() != '\n') {
-            char buffer[2];
-            buffer[0] = file.get();
-            buffer[1] = '\0';
-            fileContent += buffer;
-        }
-        else file.get();
-    }
-    iter = 0;
     this->filePath = filePath;
+    loadFileContent();
+    iter = 0;
 }
 
 void XmlParser::setFilePath(const String& filePath) {
+    this->filePath = filePath;
+}
+
+void XmlParser::loadFileContent() {
+    if(filePath == String()) {
+        fileContent = String();
+        return;
+    }
     ifstream file(filePath.toString());
     if(!file.is_open()) {
-        this->filePath = String();
-        this->fileContent = String();
+        fileContent = String();
         return;
     }
     while(!file.eof()) {
@@ -37,8 +32,8 @@ void XmlParser::setFilePath(const String& filePath) {
         }
         else file.get();
     }
-    iter = 0;
-    this->filePath = filePath;
+    fileContent = fileContent.replace("    ", "");
+    fileContent = fileContent.replace("   ", "");
 }
 
 const String& XmlParser::getFilePath() const {
