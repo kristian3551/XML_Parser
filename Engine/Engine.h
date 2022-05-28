@@ -18,11 +18,14 @@ class Engine {
     void setAttribute(const String& id, const String& key,
     const String& value);
     void printChildren(const String& id);
+    void printParent(const String& id);
     void printChildByIndex(const String& id, int index);
     void printText(const String& id);
+    void setText(const String& id, const String& text);
     void removeAttribute(const String& id, const String& key);
-    void addChild(const String& id, const String& type = "default", const String& textContent = "defaultContent");
+    void addChild(const String& id, const String& type, const String& textContent = "defaultContent");
     void removeElement(const String& parentId, const String& childId);
+    void remove(const String& id);
 public:
     void run();
 };

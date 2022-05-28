@@ -48,17 +48,25 @@ void Engine::saveAs(const String& filePath) {
 }
 void Engine::help() {
     cout << "The following commands are supported: " << endl;
-    cout << "open <fileName>       \t\t\topens <fileName>" << endl;
-    cout << "close                 \t\t\tcloses currently opened file" << endl;
-    cout << "save                  \t\t\tsaves the currently open file" << endl;
-    cout << "saveas <fileName>     \t\t\tsaves the currently open file in <fileName>" << endl;
-    cout << "help                  \t\t\tprints this information" << endl;
-    cout << "exit                  \t\t\texits the program" << endl;
-    cout << "print                 \t\t\tprints the opened file" << endl;
-    cout << "select <id> <key>     \t\t\tprints attribute to an element with <id> by key" << endl;
-    cout << "set <id> <key> <value>\t\t\tsets attribute to an element with <id> by key and value" << endl;
-    cout << "children <id>         \t\t\topens file" << endl;
-    cout << "child <id> <n>        \t\t\tprints the n-th child of an element with <id>" << endl;
+    cout << "  open <fileName>                    \t\t\topens <fileName>" << endl;
+    cout << "  close                              \t\t\tcloses currently opened file" << endl;
+    cout << "  save                               \t\t\tsaves the currently open file" << endl;
+    cout << "  saveas <fileName>                  \t\t\tsaves the currently open file in <fileName>" << endl;
+    cout << "  help                               \t\t\tprints this information" << endl;
+    cout << "  exit                               \t\t\texits the program" << endl;
+    cout << "  print                              \t\t\tprints the opened file" << endl;
+    cout << "  select <id> <key>                  \t\t\tprints attribute to an element with <id> by key" << endl;
+    cout << "  set <id> <key> <value>             \t\t\tsets attribute to an element with <id> by key and value" << endl;
+    cout << "  children <id>                      \t\t\topens file" << endl;
+    cout << "  child <id> <n>                     \t\t\tprints the n-th child of an element with <id>" << endl;
+    cout << "  text <id>                          \t\t\tprints text of element with <id>" << endl;
+    cout << "  settext <id> <newText>             \t\t\tsets textContent of element with <id> to <newText>" << endl;
+    cout << "  delete <id> <key>                  \t\t\tremoves attribute <key> from element with <id>" << endl;
+    cout << "  addchild <id> <type> <?textContent>\t\t\tcreates child element if <type> to element <id> (textContent is optional)" << endl;
+    cout << "  removechild <parentId> <childId>   \t\t\tremoves element with <childId> given <parentId>" << endl;
+    cout << "  remove <id>                        \t\t\tremoves element with <id>" << endl;
+    
+    
 }
 bool Engine::exit() {
     if(parser.getFilePath() != String()) {
@@ -105,6 +113,15 @@ void Engine::printChildren(const String& id) {
         cout << str << endl;
     }
 }
+void Engine::printParent(const String& id) {
+    try {
+        const XmlElement* el = tree.getParent(id);
+        el->print(cout);
+    }
+    catch(const String& str) {
+        cout << str << endl;
+    }
+}
 void Engine::printChildByIndex(const String& id, int index) {
     try {
         const XmlElement* el = tree.getChildByIndex(id, index);
@@ -121,6 +138,15 @@ void Engine::printText(const String& id) {
         return;
     }
     cout << el->getText() << endl;
+}
+void Engine::setText(const String& id, const String& text) {
+    try {
+        tree.setText(id, text);
+        cout << "Successfully set textContent to " << id << endl;
+    }
+    catch(const String& str) {
+        cout << str << endl;
+    }
 }
 void Engine::removeAttribute(const String& id, const String& key) {
     try {
@@ -147,6 +173,17 @@ void Engine::removeElement(const String& parentId, const String& childId) {
     bool res = tree.removeChild(parentId, childId);
     if(res) cout << "Successfully removed child of element " << parentId << endl;
     else cout << "Child removed unsuccessfully!" << endl;
+}
+void Engine::remove(const String& id) {
+    try {
+        tree.remove(id);
+        cout << "Successfully removed element" << endl;
+    }
+    catch(const String& str)
+    {
+        cout << str << endl;
+    }
+    
 }
 void Engine::run() {
     cout << "Welcome to XML Parser app. To continue, please enter a command or type \"help\" for more information." << endl;
@@ -208,8 +245,17 @@ void Engine::run() {
         else if(command.equals("removechild")) {
             removeElement(parts[1], parts[2]);
         }
+        else if(command.equals("parent")) {
+            printParent(parts[1]);
+        }
+        else if(command.equals("remove")) {
+            remove(parts[1]);
+        }
         else if(command.equals("clear")) {
             system("CLS");
+        }
+        else if(command.equals("settext")) {
+            setText(parts[1], parts[2]);
         }
         }
         catch(int value)
