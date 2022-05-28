@@ -13,6 +13,7 @@ class XmlParser {
 public:
     XmlParser(const String& filePath = String());
     void setFilePath(const String&);
+    bool fileIsOpened() const;
     void loadFileContent();
     void parseTree(XmlTree&) const;
     const String& getFilePath() const;

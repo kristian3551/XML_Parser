@@ -19,7 +19,6 @@ const ArrayList<XmlElement*> XmlPath::getElements(const XmlTree& tree) const {
             tagName = parts[i].substring(0, childIndexStart);
         else tagName = parts[i];
         if(i == 0) {
-                cout << tagName.substring(1);
                 if(!tagName.startsWith("~")) elementsToFind += tree.getElementsByTagName(tagName);
                 else elementsToFind += tree.getRoot()->getChildren()[0]->getChildrenByType(tagName.substring(1));
             }

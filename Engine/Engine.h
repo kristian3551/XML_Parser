@@ -28,6 +28,7 @@ class Engine {
     void removeElement(const String& parentId, const String& childId);
     void remove(const String& id);
     void xmlPath(const String& xmlPath);
+    bool fileIsOpened() const;
 public:
     void run();
 };

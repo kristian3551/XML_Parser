@@ -13,6 +13,10 @@ void XmlParser::setFilePath(const String& filePath) {
     this->filePath = filePath;
 }
 
+bool XmlParser::fileIsOpened() const {
+    return filePath != String();
+}
+
 void XmlParser::loadFileContent() {
     if(filePath == String()) {
         fileContent = String();

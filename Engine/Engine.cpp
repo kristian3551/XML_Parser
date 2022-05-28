@@ -8,6 +8,13 @@ const String END_OF_PROGRAM = "END_OF_PROGRAM";
 void printDelimiter() {
     cout << "----------------------" << endl;
 }
+bool Engine::fileIsOpened() const {
+    if(!parser.fileIsOpened()) {
+        cout << "File hasn't been opened!" << endl;
+        return false;
+    }
+    return true;
+}
 void Engine::openFile(const String& filePath) {
     if(parser.getFilePath() != String()) {
         cout << "File has been already opened! Close it and try again!" << endl;
@@ -31,18 +38,10 @@ void Engine::closeFile() {
     cout << "File hasn't been opened!" << endl;
 }
 void Engine::saveFile() {
-    if(parser.getFilePath() == String()) {
-        cout << "File hasn't been opened!" << endl;
-        return;
-    }
     tree.saveInFile(parser.getFilePath());
     cout << "Successfully saved " << parser.getFilePath() << endl;
 }
 void Engine::saveAs(const String& filePath) {
-    if(parser.getFilePath() == String()) {
-        cout << "File hasn't been opened!" << endl;
-        return;
-    }
     tree.saveInFile(filePath);
     cout << "Successfully saved file in " << parser.getFilePath() << endl;
 }
@@ -76,10 +75,6 @@ bool Engine::exit() {
     return true;
 }
 void Engine::print() {
-    if(parser.getFilePath() == String()) {
-        cout << "File hasn't been opened!" << endl;
-        return;
-    }
     tree.print();
 }
 void Engine::printAttribute(const String& id,
@@ -140,6 +135,9 @@ void Engine::printText(const String& id) {
     cout << el->getText() << endl;
 }
 void Engine::setText(const String& id, const String& text) {
+    if(parser.getFilePath() == String()) {
+        
+    }
     try {
         tree.setText(id, text);
         cout << "Successfully set textContent to " << id << endl;
@@ -203,17 +201,17 @@ void Engine::run() {
         String command = parts[0];
         try
         {
-            if(command.equals("open")) {
+        if(command.equals("open")) {
             openFile(parts[1]);
         }
         else if(command.equals("close")) {
-            closeFile();
+            if(fileIsOpened()) closeFile();
         }
         else if(command.equals("save")) {
-            saveFile();
+            if(fileIsOpened()) saveFile();
         }
         else if(command.equals("saveas")) {
-            saveAs(parts[1]);
+            if(fileIsOpened()) saveAs(parts[1]);
         }
         else if(command.equals("help")) {
             help();
@@ -222,51 +220,51 @@ void Engine::run() {
             if(exit()) input = END_OF_PROGRAM;
         }
         else if(command.equals("print")) {
-            print();
+            if(fileIsOpened()) print();
         }
         else if(command.equals("select")) {
-            printAttribute(parts[1], parts[2]);
+            if(fileIsOpened()) printAttribute(parts[1], parts[2]);
         }
         else if(command.equals("set")) {
-            setAttribute(parts[1], parts[2], parts[3]);
+            if(fileIsOpened()) setAttribute(parts[1], parts[2], parts[3]);
         }
         else if(command.equals("children")) {
-            printChildren(parts[1]);
+           if(fileIsOpened()) printChildren(parts[1]);
         }
         else if(command.equals("child")) {
-            printChildByIndex(parts[1], atoi(parts[2].toString()));
+            if(fileIsOpened()) printChildByIndex(parts[1], atoi(parts[2].toString()));
         }
         else if(command.equals("text")) {
-            printText(parts[1]);
+            if(fileIsOpened()) printText(parts[1]);
         }
         else if(command.equals("delete")) {
-            removeAttribute(parts[1], parts[2]);
+            if(fileIsOpened()) removeAttribute(parts[1], parts[2]);
         }
         else if(command.equals("newchild")) {
             if(parts.getSize() == 3) {
-                addChild(parts[1], parts[2]);
+                if(fileIsOpened()) addChild(parts[1], parts[2]);
             }
             else if(parts.getSize() == 4) {
-                addChild(parts[1], parts[2], parts[3]);
+                if(fileIsOpened()) addChild(parts[1], parts[2], parts[3]);
             }
         }
         else if(command.equals("removechild")) {
-            removeElement(parts[1], parts[2]);
+            if(fileIsOpened()) removeElement(parts[1], parts[2]);
         }
         else if(command.equals("parent")) {
-            printParent(parts[1]);
+            if(fileIsOpened()) printParent(parts[1]);
         }
         else if(command.equals("remove")) {
-            remove(parts[1]);
+            if(fileIsOpened()) remove(parts[1]);
         }
         else if(command.equals("clear")) {
             system("CLS");
         }
         else if(command.equals("settext")) {
-            setText(parts[1], parts[2]);
+            if(fileIsOpened()) setText(parts[1], parts[2]);
         }
         else if(command.equals("xmlpath")) {
-            xmlPath(parts[1]);
+            if(fileIsOpened()) xmlPath(parts[1]);
         }
         }
         catch(int value)
