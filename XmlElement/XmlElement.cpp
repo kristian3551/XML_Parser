@@ -3,14 +3,15 @@
 using namespace std;
 
 XmlElement::XmlElement(const String& type, const String& id,
-     const String& textContent) {
+     const String& textContent, XmlElement* parent) {
          this->type = type;
          this->id = id;
          this->textContent = textContent;
+         this->parent = parent;
      }
 bool XmlElement::addChild(const String& type, const String& id,
-const String& textContent) {
-    XmlElement* child = new XmlElement(type, id, textContent);
+const String& textContent, XmlElement* parent) {
+    XmlElement* child = new XmlElement(type, id, textContent, parent);
     this->children.push(child);
     return true;
 }
@@ -34,6 +35,10 @@ bool XmlElement::removeChild(const String& id) {
     if(element == nullptr) return false;
     freeElement(element);
     return this->children.remove(element);
+}
+bool XmlElement::remove() {
+    parent->removeChild(id);
+    return true;
 }
 bool XmlElement::setTextContent(const String& textContent) {
     this->textContent = textContent;
@@ -103,4 +108,7 @@ const String& XmlElement::getType() const {
 }
 const String& XmlElement::getId() const {
     return id;
+}
+const XmlElement* XmlElement::getParent() const {
+    return parent;
 }

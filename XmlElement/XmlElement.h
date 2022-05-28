@@ -11,15 +11,17 @@ class XmlElement {
     String textContent;
     ArrayList<XmlElement*> children;
     Dictionary<String, String> attributes;
+    XmlElement* parent;
 public:
     XmlElement(const String& type = "defaultType", const String& id = "dId",
-     const String& textContent = "defaultContent");
+     const String& textContent = "defaultContent", XmlElement* parent = nullptr);
     bool addChild(const String& type, const String& id, 
-    const String& textContent = "defaultContent");
+    const String& textContent = "defaultContent", XmlElement* parent = nullptr);
     bool addChild(const XmlElement& el);
     bool setTextContent(const String& textContent);
     bool setId(const String& id);
     bool removeChild(const String& id);
+    bool remove();
     bool setAttribute(const String& key, const String& value);
     bool removeAttribute(const String& key);
     const XmlElement* getChild(int index) const;
@@ -27,6 +29,7 @@ public:
     const XmlElement* getLastChild() const;
     const String& getText() const;
     const String& getId() const;
+    const XmlElement* getParent() const;
     const Dictionary<String, String>& getAttributes() const;
     const String& getType() const;
     void print(std::ostream& os, int k = 0) const;

@@ -21,14 +21,17 @@ public:
     bool printAttribute(const String& id, const String& key) const;
     void setAttribute(const String& id,
     const String& key, const String& value);
+    void setText(const String& id, const String& textContent);
     void printChildren(const String& id) const;
     const XmlElement* getChildByIndex(const String& id, int index) const;
     const XmlElement* getLastChild(const String& id) const;
+    const XmlElement* getParent(const String& id) const;
     void changeTextContent(const String& id, const String& textContent);
     bool deleteAttribute(const String& id, const String& key);
     void addChild(const String& id, const XmlElement& el);
     const XmlElement* getElement(const String& id) const;
     bool removeChild(const String&, const String&);
+    bool remove(const String& id);
     void clear();
 };
 

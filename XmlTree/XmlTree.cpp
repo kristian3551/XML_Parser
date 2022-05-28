@@ -51,6 +51,12 @@ const String& key, const String& value) {
         throw String("There is no such element");
     el->setAttribute(key, value);
 }
+void XmlTree::setText(const String& id, const String& textContent) {
+    XmlElement* el = getElementById(id, root);
+    if(el == nullptr) 
+        throw String("There is no such element");
+    el->setTextContent(textContent);
+}
 void XmlTree::printChildren(const String& id) const {
     XmlElement* el = getElementById(id, root);
     if(el == nullptr) return;
@@ -95,7 +101,7 @@ void XmlTree::addChild(const String& id, const XmlElement& el) {
         idToBeAdded = el.getId();
     else idToBeAdded = el.getId().concat("_").concat(String(countOfElements));
     countOfElements++;
-    parent->addChild(el.getType(), idToBeAdded, el.getText());
+    parent->addChild(el.getType(), idToBeAdded, el.getText(), parent);
     
     for(int i = 0; i < el.getAttributes().getSize(); i++) {
         getElementById(idToBeAdded, root)->setAttribute(
@@ -103,6 +109,12 @@ void XmlTree::addChild(const String& id, const XmlElement& el) {
         );
     }
     ids.add(idToBeAdded, parent->getChildren()[parent->getChildren().getSize() - 1]);
+}
+const XmlElement* XmlTree::getParent(const String& id) const {
+    XmlElement* el = getElementById(id, root);
+    if(el == nullptr) 
+        throw String("There is no such element");
+    return el->getParent();
 }
 
 const XmlElement* XmlTree::getElement(const String& id) const {
@@ -119,4 +131,11 @@ bool XmlTree::removeChild(const String& parentId, const String& childId) {
     XmlElement* el = getElementById(parentId, root);
     if(el == nullptr) return false;
     return el->removeChild(childId);
+}
+
+bool XmlTree::remove(const String& id) {
+    XmlElement* el = getElementById(id, root);
+    if(el == nullptr) return false;
+    el->remove();
+    return true;
 }
