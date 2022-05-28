@@ -51,6 +51,43 @@ bool XmlElement::setId(const String& id) {
 bool XmlElement::setAttribute(const String& key, const String& value) {
     return attributes.setValue(key, value);
 }
+bool XmlElement::hasAttribute(const String& key, const String& value) const {
+    try {
+        if(value == String()) {
+            return attributes.hasKey(key);
+        }
+        else {
+            return attributes.find(key) == value;
+        }
+    }
+    catch(const String& str) {
+        return false;
+    }
+}
+const ArrayList<XmlElement*> XmlElement::getChildrenByAttribute(const String& key, const String& value) const {
+    ArrayList<XmlElement*> res;
+    for(int i = 0; i < children.getSize(); i++) {
+        if(children[i]->hasAttribute(key, value)) {
+            res.push(children[i]);
+        }
+    }
+    return res;
+}
+const ArrayList<XmlElement*> XmlElement::getChildrenByIndex(int index) const {
+    ArrayList<XmlElement*> res;
+    if(index < 0 || index >= children.getSize()) return res;
+    res.push(children[index]);
+    return res;
+}
+const ArrayList<XmlElement*> XmlElement::getChildrenByType(const String& type) const {
+    ArrayList<XmlElement*> res;
+    for(int i = 0; i < children.getSize(); i++) {
+        if(children[i]->getType() == type) {
+            res.push(children[i]);
+        }
+    }
+    return res;
+}
 bool XmlElement::removeAttribute(const String& key) {
     return attributes.remove(key);
 }

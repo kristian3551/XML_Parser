@@ -32,6 +32,8 @@ public:
     const XmlElement* getElement(const String& id) const;
     bool removeChild(const String&, const String&);
     bool remove(const String& id);
+    const ArrayList<XmlElement*> getElementsByTagName(const String& tagName) const;
+    const ArrayList<XmlElement*> getElementsByAttribute(const String& attribute, const String& value = String()) const;
     void clear();
 };
 

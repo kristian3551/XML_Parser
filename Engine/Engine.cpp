@@ -65,7 +65,7 @@ void Engine::help() {
     cout << "  addchild <id> <type> <?textContent>\t\t\tcreates child element if <type> to element <id> (textContent is optional)" << endl;
     cout << "  removechild <parentId> <childId>   \t\t\tremoves element with <childId> given <parentId>" << endl;
     cout << "  remove <id>                        \t\t\tremoves element with <id>" << endl;
-    
+    cout << "  xmlpath <xmlPath>                  \t\t\tperforms basic XMLPath requests" << endl;
     
 }
 bool Engine::exit() {
@@ -185,6 +185,14 @@ void Engine::remove(const String& id) {
     }
     
 }
+void Engine::xmlPath(const String& xmlPath) {
+    XmlPath path(xmlPath);
+    const ArrayList<XmlElement*> elementsToFind = path.getElements(tree);
+    cout << "Elements: " << endl;
+    for(int i = 0; i < elementsToFind.getSize(); i++) {
+        elementsToFind[i]->print(cout);
+    }
+}
 void Engine::run() {
     cout << "Welcome to XML Parser app. To continue, please enter a command or type \"help\" for more information." << endl;
     String input;
@@ -256,6 +264,9 @@ void Engine::run() {
         }
         else if(command.equals("settext")) {
             setText(parts[1], parts[2]);
+        }
+        else if(command.equals("xmlpath")) {
+            xmlPath(parts[1]);
         }
         }
         catch(int value)

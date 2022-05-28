@@ -139,3 +139,25 @@ bool XmlTree::remove(const String& id) {
     el->remove();
     return true;
 }
+
+const ArrayList<XmlElement*> XmlTree::getElementsByTagName(const String& tagName) const {
+    ArrayList<XmlElement*> list;
+    for(int i = 0; i < ids.getSize(); i++) {
+        if(ids.getPairs()[i].second->getType() == tagName) 
+            list.push(ids.getPairs()[i].second);
+    }
+    return list;
+}
+
+const ArrayList<XmlElement*> XmlTree::getElementsByAttribute(const String& attribute, const String& value) const {
+    ArrayList<XmlElement*> list;
+    for(int i = 0; i < ids.getSize(); i++) {
+        if(value == String())
+            if(ids.getPairs()[i].second->getAttributes().hasKey(attribute)) 
+                list.push(ids.getPairs()[i].second);
+        else if(ids.getPairs()[i].second->getAttributes().hasKey(attribute)
+        && ids.getPairs()[i].second->getAttributes().find(attribute) == value)
+            list.push(ids.getPairs()[i].second);
+    }
+    return list;
+}

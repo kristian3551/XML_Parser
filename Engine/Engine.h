@@ -2,6 +2,7 @@
 #define ENGINE_H
 #include "../XmlParser/XmlParser.h"
 #include "../XmlTree/XmlTree.h"
+#include "../XmlPath/XmlPath.h"
 
 class Engine {
     XmlParser parser;
@@ -26,6 +27,7 @@ class Engine {
     void addChild(const String& id, const String& type, const String& textContent = "defaultContent");
     void removeElement(const String& parentId, const String& childId);
     void remove(const String& id);
+    void xmlPath(const String& xmlPath);
 public:
     void run();
 };
