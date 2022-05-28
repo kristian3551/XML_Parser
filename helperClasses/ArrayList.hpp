@@ -25,6 +25,8 @@ public:
     int indexOf(const T&) const;
     T& operator[](int);
     const T& operator[](int) const;
+    ArrayList<T>& operator+=(const ArrayList<T>&);
+    ArrayList<T>& operator+=(const T& el);
     int getSize() const;
     bool isEmpty() const;
     void clear();
@@ -128,6 +130,18 @@ const T& ArrayList<T>::operator[](int index) const {
     if(index < 0 || index >= size)
         throw 0;
     return *data[index];
+}
+template <typename T>
+ArrayList<T>& ArrayList<T>::operator+=(const ArrayList<T>& other) {
+    for(int i = 0; i < other.size; i++) {
+        push(*other.data[i]);
+    }
+    return *this;
+}
+template <typename T>
+ArrayList<T>& ArrayList<T>::operator+=(const T& el) {
+    push(el);
+    return *this;
 }
 template <typename T>
 int ArrayList<T>::getSize() const {

@@ -54,7 +54,22 @@ String::String(int n) {
 String::String(const String& string) {
     copyFrom(string);
 }
-
+String::String(String&& other) {
+    str = other.str;
+    other.str = nullptr;
+    length = other.length;
+    capacity = other.capacity;
+}
+String& String::operator =(String&& other) {
+    if(this != &other) {
+        free();
+        str = other.str;
+        other.str = nullptr;
+        length = other.length;
+        capacity = other.capacity;
+    }
+    return *this;
+}
 String& String::operator =(const String& string) {
     if(this != &string) {
         free();
@@ -113,6 +128,24 @@ String String::substring(int startIndex, int endIndex) const {
     data[endIndex - startIndex] = '\0';
     String res(data);
     delete[] data;
+    return res;
+}
+
+String String::replace(const String& toReplace, const String& whatToReplace) const {
+    String res;
+    int iter = 0;
+    while(iter < length) {
+        if(!isPrefix(str + iter, toReplace.toString())) {
+            char buffer[2];
+            buffer[0] = str[iter++];
+            buffer[1] = '\0';
+            res += buffer;
+        }
+        else {
+            res += whatToReplace;
+            iter += toReplace.length;
+        }
+    }
     return res;
 }
 
