@@ -251,12 +251,7 @@ String String::trim() const {
             break;
         }
     }
-    char* ptr = new char[index + 1];
-    strncpy(ptr, str, index);
-    ptr[index] = '\0';
-    String res(ptr);
-    delete[] ptr;
-    return res;
+    return substring(0, index);
 }
 
 int String::getLength() const {
