@@ -34,6 +34,7 @@ bool XmlElement::setTextContent(const String& textContent) {
 }
 bool XmlElement::setParent(const XmlElement* parent) {
     this->parent = (XmlElement*)parent;
+    return true;
 }
 bool XmlElement::setId(const String& id) {
     this->id = id;
@@ -103,7 +104,7 @@ void XmlElement::print(std::ostream& os, int k) const {
     os << "<" << type;
     os << " id=\"" << id << "\"";
     for(int i = 0; i < attributes.getSize(); i++) {
-        os << " " << attributes.getPairs()[i].first << "="
+        if(attributes.getPairs()[i].first != "id") os << " " << attributes.getPairs()[i].first << "="
         << "\"" << attributes.getPairs()[i].second << "\"";
     }
     os << ">";

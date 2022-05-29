@@ -37,8 +37,7 @@ void XmlParser::loadFileContent() {
         else file.get();
     }
     
-    fileContent = fileContent.replace("    ", ""); // TODO
-    fileContent = fileContent.replace("   ", ""); // TODO   
+    minify();
 }
 
 const String& XmlParser::getFilePath() const {
@@ -50,6 +49,43 @@ bool isLetter(char c) {
         (c >= 'a' && c <= 'z');
 }
 
+void XmlParser::minify() {
+    String minifiedContent;
+    int iter = 0;
+    while(iter < fileContent.getLength()) {
+        if(fileContent.substring(iter).startsWith("  ")) {
+            bool startsWithSpecialSymbol = fileContent.charAt(iter - 1) == '<'
+            || fileContent.charAt(iter - 1) == '/'
+            || fileContent.charAt(iter - 1) == '=';
+            while(fileContent.charAt(iter) == ' ') {
+                iter++;
+            }
+            bool endsWithSpecialSymbol = fileContent.charAt(iter) == '<'
+            || fileContent.charAt(iter) == '/'
+            || fileContent.charAt(iter) == '>'
+            || fileContent.charAt(iter) == '=';
+            if(!startsWithSpecialSymbol && !endsWithSpecialSymbol) minifiedContent += " ";
+        }
+        else if(fileContent.charAt(iter) == ' ') {
+            bool startsWithSpecialSymbol = fileContent.charAt(iter - 1) == '<'
+            || fileContent.charAt(iter - 1) == '/'
+            || fileContent.charAt(iter - 1) == '=';
+            
+            bool endWithSpecialSymbol = 
+            (fileContent.charAt(iter + 1) == '<'
+            || fileContent.charAt(iter + 1) == '/'
+            || fileContent.charAt(iter + 1) == '=');
+            if(startsWithSpecialSymbol || endWithSpecialSymbol) 
+                iter++;
+            else minifiedContent += fileContent.charAt(iter++);
+        }
+        else {
+            minifiedContent += fileContent.charAt(iter++);
+        }
+    }
+    fileContent = minifiedContent;
+}
+
 void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const XmlElement* parent) const {
     String tagInfo;
     while(elementTextContent.charAt(iter) != '>') {
@@ -57,7 +93,7 @@ void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const Xml
         iter++;
     }
     ArrayList<String> tagElements = tagInfo.split(" ");
-    XmlElement node(tagElements[0], "", "", (XmlElement*)parent);
+    XmlElement node(tagElements[0], "def", "", (XmlElement*)parent);
     for(int i = 1; i < tagElements.getSize(); i++) {
         ArrayList<String> attribute = tagElements[i].split("=");
         attribute[1] = (attribute[1].charAt(0) == '"') ? attribute[1].substring(1, attribute[1].getLength() - 1)
@@ -65,7 +101,7 @@ void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const Xml
         attribute[0] = (attribute[0].charAt(0) == '"') ? attribute[0].substring(1, attribute[0].getLength() - 1)
         : attribute[0];
         if(attribute[0] == "id") node.setId(attribute[1]);
-        else node.setAttribute(attribute[0], attribute[1]);
+        node.setAttribute(attribute[0], attribute[1]);
     }
     iter++;
     String textContent;

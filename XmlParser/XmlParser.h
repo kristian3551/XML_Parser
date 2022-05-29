@@ -15,6 +15,7 @@ public:
     void setFilePath(const String&);
     bool fileIsOpened() const;
     void loadFileContent();
+    void minify();
     void parseTree(XmlTree&) const;
     const String& getFilePath() const;
 };
