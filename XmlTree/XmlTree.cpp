@@ -28,7 +28,17 @@ void XmlTree::print() const {
         root->getChildren()[i]->print(cout);
     }
 }
-XmlElement* XmlTree::getElementById(const String& id, XmlElement* el) const {
+const XmlElement* XmlTree::getElementById(const String& id, XmlElement* el) const {
+    if(el->getId() == id) return el;
+    for(int i = 0; i < el->getChildren().getSize(); i++) {
+        const XmlElement* res = getElementById(id, el->getChildren()[i]);
+        if(res != nullptr) {
+            return res;
+        }
+    }
+    return nullptr;
+}
+XmlElement* XmlTree::getElementById(const String& id, XmlElement* el) {
     if(el->getId() == id) return el;
     for(int i = 0; i < el->getChildren().getSize(); i++) {
         XmlElement* res = getElementById(id, el->getChildren()[i]);
@@ -39,7 +49,7 @@ XmlElement* XmlTree::getElementById(const String& id, XmlElement* el) const {
     return nullptr;
 }
 bool XmlTree::printAttribute(const String& id, const String& key) const {
-    XmlElement* el = getElementById(id, root);
+    const XmlElement* el = getElementById(id, root);
     if(el == nullptr) return false;
     cout << el->getAttributes().find(key);
     return true;
@@ -58,7 +68,7 @@ void XmlTree::setText(const String& id, const String& textContent) {
     el->setTextContent(textContent);
 }
 void XmlTree::printChildren(const String& id) const {
-    XmlElement* el = getElementById(id, root);
+    const XmlElement* el = getElementById(id, root);
     if(el == nullptr) return;
     if(el->getChildren().getSize() == 0) {
         cout << "There are no children of node with id " << id << endl;
@@ -68,13 +78,13 @@ void XmlTree::printChildren(const String& id) const {
     }
 }
 const XmlElement* XmlTree::getChildByIndex(const String& id, int index) const {
-    XmlElement* el = getElementById(id, root);
+    const XmlElement* el = getElementById(id, root);
     if(el == nullptr) 
         throw String("There is no such element");
     return getElementById(id, root)->getChildren()[index];
 }
 const XmlElement* XmlTree::getLastChild(const String& id) const {
-    XmlElement* el = getElementById(id, root);
+    const XmlElement* el = getElementById(id, root);
     if(el == nullptr)
         throw String("There is no such element");
     const XmlElement* res = el->getLastChild();
@@ -83,7 +93,10 @@ const XmlElement* XmlTree::getLastChild(const String& id) const {
     return el->getLastChild();
 }
 void XmlTree::changeTextContent(const String& id, const String& textContent) {
-    getElementById(id, root)->setTextContent(textContent);
+    XmlElement* el = getElementById(id, root);
+    if(el == nullptr)
+        throw String("There is no such element");
+    el->setTextContent(textContent);
 }
 bool XmlTree::deleteAttribute(const String& id, const String& key) {
     XmlElement* el = getElementById(id, root);
@@ -107,7 +120,7 @@ void XmlTree::addChild(const String& id, const XmlElement& el) {
     ids.add(idToBeAdded, parent->getChildren()[parent->getChildren().getSize() - 1]);
 }
 const XmlElement* XmlTree::getParent(const String& id) const {
-    XmlElement* el = getElementById(id, root);
+    const XmlElement* el = getElementById(id, root);
     if(el == nullptr) 
         throw String("There is no such element");
     return el->getParent();
