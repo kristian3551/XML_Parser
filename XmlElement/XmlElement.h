@@ -5,6 +5,9 @@
 #include "../helperClasses/String/String.h"
 #include <iostream>
 
+const String DEFAULT_ID = "def";
+const String DEFAULT_TEXT_CONTENT = "";
+
 class XmlElement {
     String type;
     String id;
@@ -13,10 +16,10 @@ class XmlElement {
     Dictionary<String, String> attributes;
     XmlElement* parent;
 public:
-    XmlElement(const String& type = "defaultType", const String& id = "dId",
-     const String& textContent = String(), XmlElement* parent = nullptr);
+    XmlElement(const String& type = "defaultType", const String& id = DEFAULT_ID,
+     const String& textContent = DEFAULT_TEXT_CONTENT, XmlElement* parent = nullptr);
     bool addChild(const String& type, const String& id, 
-    const String& textContent = String(), XmlElement* parent = nullptr);
+    const String& textContent = DEFAULT_TEXT_CONTENT, XmlElement* parent = nullptr);
     bool addChild(const XmlElement& el);
     bool setTextContent(const String& textContent);
     bool setParent(const XmlElement*);

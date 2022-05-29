@@ -157,7 +157,7 @@ void Engine::removeAttribute(const String& id, const String& key) {
     }
 }
 void Engine::addChild(const String& id, const String& type, const String& textContent) {
-    XmlElement el(type, "dId", textContent);
+    XmlElement el(type, DEFAULT_ID, textContent);
     try {
         tree.addChild(id, el);
     }

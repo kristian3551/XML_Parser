@@ -93,7 +93,7 @@ void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const Xml
         iter++;
     }
     ArrayList<String> tagElements = tagInfo.split(" ");
-    XmlElement node(tagElements[0], "def", "", (XmlElement*)parent);
+    XmlElement node(tagElements[0], DEFAULT_ID, DEFAULT_TEXT_CONTENT, (XmlElement*)parent);
     for(int i = 1; i < tagElements.getSize(); i++) {
         ArrayList<String> attribute = tagElements[i].split("=");
         attribute[1] = (attribute[1].charAt(0) == '"') ? attribute[1].substring(1, attribute[1].getLength() - 1)
