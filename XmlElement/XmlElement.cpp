@@ -16,28 +16,16 @@ const String& textContent, XmlElement* parent) {
     return true;
 }
 bool XmlElement::addChild(const XmlElement& el) {
-    XmlElement* child = new XmlElement(el.type, el.id, el.textContent);
-    for(int i = 0; i < el.attributes.getSize(); i++) {
-        child->setAttribute(
-            el.attributes.getPairs()[i].first,
-            el.attributes.getPairs()[i].second
-        );
-    }
+    XmlElement* child = new XmlElement(el);
     return this->children.push(child);
 }
-bool XmlElement::removeChild(const String& id) {
-    XmlElement* element = nullptr;
-    for(int i = 0; i < children.getSize(); i++)
-        if(children[i]->id == id) {
-            element = children[i];
-            break;
-        }
-    if(element == nullptr) return false;
-    freeElement(element);
-    return this->children.remove(element);
+bool XmlElement::removeChild(XmlElement* el) {
+    bool res = this->children.remove(el);
+    if(res) freeElement(el);
+    return res;
 }
 bool XmlElement::remove() {
-    parent->removeChild(id);
+    parent->removeChild(this);
     return true;
 }
 bool XmlElement::setTextContent(const String& textContent) {
@@ -116,9 +104,7 @@ void XmlElement::print(std::ostream& os, int k) const {
         << "\"" << attributes.getPairs()[i].second << "\"";
     }
     os << ">";
-    if(textContent != "defaultContent") {
-        os << textContent;
-    }
+    os << textContent;
     if(!this->children.isEmpty()) os << endl;
     for(int i = 0; i < this->children.getSize(); i++) {
         this->children[i]->print(os, k + 1);

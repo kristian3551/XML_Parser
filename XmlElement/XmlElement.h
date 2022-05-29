@@ -14,13 +14,13 @@ class XmlElement {
     XmlElement* parent;
 public:
     XmlElement(const String& type = "defaultType", const String& id = "dId",
-     const String& textContent = "defaultContent", XmlElement* parent = nullptr);
+     const String& textContent = String(), XmlElement* parent = nullptr);
     bool addChild(const String& type, const String& id, 
-    const String& textContent = "defaultContent", XmlElement* parent = nullptr);
+    const String& textContent = String(), XmlElement* parent = nullptr);
     bool addChild(const XmlElement& el);
     bool setTextContent(const String& textContent);
     bool setId(const String& id);
-    bool removeChild(const String& id);
+    bool removeChild(XmlElement*);
     bool remove();
     bool setAttribute(const String& key, const String& value);
     bool hasAttribute(const String& key, const String& value = String()) const;
