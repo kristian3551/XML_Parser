@@ -36,8 +36,9 @@ void XmlParser::loadFileContent() {
         }
         else file.get();
     }
-    fileContent = fileContent.replace("    ", "");
-    fileContent = fileContent.replace("   ", "");
+    
+    fileContent = fileContent.replace("    ", ""); // TODO
+    fileContent = fileContent.replace("   ", ""); // TODO   
 }
 
 const String& XmlParser::getFilePath() const {
@@ -52,11 +53,11 @@ bool isLetter(char c) {
 void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const XmlElement* parent) const {
     String tagInfo;
     while(elementTextContent.charAt(iter) != '>') {
-        tagInfo += elementTextContent.substring(iter, iter + 1);
+        tagInfo += elementTextContent.charAt(iter);
         iter++;
     }
     ArrayList<String> tagElements = tagInfo.split(" ");
-    XmlElement node(tagElements[0]);
+    XmlElement node(tagElements[0], "", "", (XmlElement*)parent);
     for(int i = 1; i < tagElements.getSize(); i++) {
         ArrayList<String> attribute = tagElements[i].split("=");
         attribute[1] = (attribute[1].charAt(0) == '"') ? attribute[1].substring(1, attribute[1].getLength() - 1)
@@ -69,10 +70,10 @@ void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const Xml
     iter++;
     String textContent;
     while(elementTextContent.charAt(iter) != '<') {
-        textContent += elementTextContent.substring(iter, iter + 1);
+        textContent += elementTextContent.charAt(iter);
         iter++;
     }
-    if(textContent != String()) node.setTextContent(textContent);
+    node.setTextContent(textContent);
     tree.addChild(parent->getId(), node);
     iter++;
     if(elementTextContent.charAt(iter) != '/')
