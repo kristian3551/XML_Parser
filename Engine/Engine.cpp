@@ -184,8 +184,7 @@ void Engine::remove(const String& id) {
     
 }
 void Engine::xmlPath(const String& xmlPath) {
-    XmlPath path(xmlPath);
-    const ArrayList<XmlElement*> elementsToFind = path.getElements(tree);
+    const ArrayList<XmlElement*> elementsToFind = XmlPath::getElements(xmlPath, tree);
     cout << "Elements: " << endl;
     for(int i = 0; i < elementsToFind.getSize(); i++) {
         elementsToFind[i]->print(cout);

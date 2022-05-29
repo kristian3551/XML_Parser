@@ -24,7 +24,7 @@ class Engine {
     void printText(const String& id);
     void setText(const String& id, const String& text);
     void removeAttribute(const String& id, const String& key);
-    void addChild(const String& id, const String& type, const String& textContent = "defaultContent");
+    void addChild(const String& id, const String& type, const String& textContent = String());
     void removeElement(const String& parentId, const String& childId);
     void remove(const String& id);
     void xmlPath(const String& xmlPath);
