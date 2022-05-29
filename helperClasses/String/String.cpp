@@ -108,9 +108,9 @@ ArrayList<String> String::split(const String& separator) const {
     int startIndex = 0;
     for(int i = 0; i < length; i++) {
         if(isPrefix(str + i, separator.toString())) {
-            if(startIndex != i - 1) list.push(substring(startIndex, i));
-            startIndex = (i != length - 1 ? i : i) + separator.getLength();
-            i += separator.getLength();
+            if(startIndex != i) list.push(substring(startIndex, i));
+            startIndex = i + separator.getLength();
+            i += separator.getLength() - 1;
         }
     }
     if(startIndex != length) list.push(substring(startIndex, length));
