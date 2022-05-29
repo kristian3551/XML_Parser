@@ -163,8 +163,8 @@ void String::operator +=(const String& string) {
 }
 void String::operator +=(char c) {
     if(capacity == length + 1) resize();
-    str[length] = c;
-    str[length + 1] = '\0';
+    str[length++] = c;
+    str[length] = '\0';
 }
 ostream& operator <<(ostream& file, const String& string) {
     file << string.str;
