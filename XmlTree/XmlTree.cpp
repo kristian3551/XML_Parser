@@ -97,18 +97,13 @@ void XmlTree::addChild(const String& id, const XmlElement& el) {
         throw String("There is no such element");
     String idToBeAdded;
     XmlElement elToBeAdded = el;
+    elToBeAdded.setParent(parent);
     if(!ids.hasKey(el.getId()))
         idToBeAdded = el.getId();
     else idToBeAdded = el.getId().concat("_").concat(String(countOfElements));
     countOfElements++;
-    parent->addChild(el);
-    // parent->addChild(el.getType(), idToBeAdded, el.getText(), parent);
-    // TODO
-    // for(int i = 0; i < el.getAttributes().getSize(); i++) {
-    //     getElementById(idToBeAdded, root)->setAttribute(
-    //         el.getAttributes().getPairs()[i].first, el.getAttributes().getPairs()[i].second 
-    //     );
-    // }
+    elToBeAdded.setId(idToBeAdded);
+    parent->addChild(elToBeAdded);
     ids.add(idToBeAdded, parent->getChildren()[parent->getChildren().getSize() - 1]);
 }
 const XmlElement* XmlTree::getParent(const String& id) const {

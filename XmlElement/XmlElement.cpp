@@ -32,6 +32,9 @@ bool XmlElement::setTextContent(const String& textContent) {
     this->textContent = textContent;
     return true;
 }
+bool XmlElement::setParent(const XmlElement* parent) {
+    this->parent = (XmlElement*)parent;
+}
 bool XmlElement::setId(const String& id) {
     this->id = id;
     return true;

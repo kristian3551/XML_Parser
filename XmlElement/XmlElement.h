@@ -19,6 +19,7 @@ public:
     const String& textContent = String(), XmlElement* parent = nullptr);
     bool addChild(const XmlElement& el);
     bool setTextContent(const String& textContent);
+    bool setParent(const XmlElement*);
     bool setId(const String& id);
     bool removeChild(XmlElement*);
     bool remove();
