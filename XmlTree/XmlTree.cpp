@@ -101,13 +101,14 @@ void XmlTree::addChild(const String& id, const XmlElement& el) {
         idToBeAdded = el.getId();
     else idToBeAdded = el.getId().concat("_").concat(String(countOfElements));
     countOfElements++;
-    parent->addChild(el.getType(), idToBeAdded, el.getText(), parent);
-    
-    for(int i = 0; i < el.getAttributes().getSize(); i++) {
-        getElementById(idToBeAdded, root)->setAttribute(
-            el.getAttributes().getPairs()[i].first, el.getAttributes().getPairs()[i].second 
-        );
-    }
+    parent->addChild(el);
+    // parent->addChild(el.getType(), idToBeAdded, el.getText(), parent);
+    // TODO
+    // for(int i = 0; i < el.getAttributes().getSize(); i++) {
+    //     getElementById(idToBeAdded, root)->setAttribute(
+    //         el.getAttributes().getPairs()[i].first, el.getAttributes().getPairs()[i].second 
+    //     );
+    // }
     ids.add(idToBeAdded, parent->getChildren()[parent->getChildren().getSize() - 1]);
 }
 const XmlElement* XmlTree::getParent(const String& id) const {
@@ -129,8 +130,9 @@ void XmlTree::clear() {
 
 bool XmlTree::removeChild(const String& parentId, const String& childId) {
     XmlElement* el = getElementById(parentId, root);
+    XmlElement* child = getElementById(childId, root);
     if(el == nullptr) return false;
-    return el->removeChild(childId);
+    return el->removeChild(child);
 }
 
 bool XmlTree::remove(const String& id) {
