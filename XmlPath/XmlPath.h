@@ -5,10 +5,8 @@
 #include "../XmlTree/XmlTree.h"
 
 class XmlPath {
-    String xmlPath;
 public:
-    XmlPath(const String&);
-    const ArrayList<XmlElement*> getElements(const XmlTree&) const;    
+    static const ArrayList<XmlElement*> getElements(const String&, const XmlTree&);   
 };
 
 #endif

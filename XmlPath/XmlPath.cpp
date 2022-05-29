@@ -2,11 +2,7 @@
 #include <iostream>
 using namespace std;
 
-XmlPath::XmlPath(const String& xmlPath) {
-    this->xmlPath = xmlPath;
-}
-
-const ArrayList<XmlElement*> XmlPath::getElements(const XmlTree& tree) const {
+const ArrayList<XmlElement*> XmlPath::getElements(const String& xmlPath, const XmlTree& tree) {
     ArrayList<String> parts = xmlPath.split("/");
     ArrayList<XmlElement*> elementsToFind;
     for(int i = 0; i < parts.getSize(); i++) {
