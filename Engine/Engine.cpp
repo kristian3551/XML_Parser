@@ -25,7 +25,14 @@ void Engine::openFile(const String& filePath) {
         return;
     }
     parser = XmlParser(filePath);
-    parser.parseTree(tree);
+    try {
+        parser.parseTree(tree);
+    }
+    catch(...) {
+        parser.setFilePath("");
+        cout << "Parsing error!" << endl;
+    }
+    
     cout << "Successfully opened " << filePath << endl;
 }
 void Engine::closeFile() {
@@ -59,12 +66,12 @@ void Engine::help() {
     cout << "  children <id>                      \t\t\topens file" << endl;
     cout << "  child <id> <n>                     \t\t\tprints the n-th child of an element with <id>" << endl;
     cout << "  text <id>                          \t\t\tprints text of element with <id>" << endl;
-    cout << "  settext <id> <newText>             \t\t\tsets textContent of element with <id> to <newText>" << endl;
+    cout << "  settext <id>                       \t\t\tsets textContent of element with <id> to <newText>" << endl;
     cout << "  delete <id> <key>                  \t\t\tremoves attribute <key> from element with <id>" << endl;
     cout << "  addchild <id> <type> <?textContent>\t\t\tcreates child element if <type> to element <id> (textContent is optional)" << endl;
     cout << "  removechild <parentId> <childId>   \t\t\tremoves element with <childId> given <parentId>" << endl;
     cout << "  remove <id>                        \t\t\tremoves element with <id>" << endl;
-    cout << "  xmlpath <xmlPath>                  \t\t\tperforms basic XMLPath requests" << endl;
+    cout << "  xpath <xmlPath>                  \t\t\tperforms basic XPath requests" << endl;
     
 }
 bool Engine::exit() {
@@ -134,10 +141,10 @@ void Engine::printText(const String& id) {
     }
     cout << el->getText() << endl;
 }
-void Engine::setText(const String& id, const String& text) {
-    if(parser.getFilePath() == String()) {
-        
-    }
+void Engine::setText(const String& id) {
+    cout << "> Enter node text content: ";
+    String text;
+    cin >> text;
     try {
         tree.setText(id, text);
         cout << "Successfully set textContent to " << id << endl;
@@ -156,8 +163,12 @@ void Engine::removeAttribute(const String& id, const String& key) {
         cout << str << endl;
     }
 }
-void Engine::addChild(const String& id, const String& type, const String& textContent) {
-    XmlElement el(type, DEFAULT_ID, textContent);
+void Engine::addChild(const String& id, const String& type) {
+    XmlElement el(type, DEFAULT_ID);
+    cout << "> Enter node text content (optional): ";
+    String textContent;
+    cin >> textContent;
+    el.setTextContent(textContent);
     try {
         tree.addChild(id, el);
     }
@@ -201,7 +212,7 @@ void Engine::run() {
         try
         {
         if(command.equals("open")) {
-            openFile(parts[1]);
+            openFile(input.substring(parts[0].getLength() + 1));
         }
         else if(command.equals("close")) {
             if(fileIsOpened()) closeFile();
@@ -240,12 +251,7 @@ void Engine::run() {
             if(fileIsOpened()) removeAttribute(parts[1], parts[2]);
         }
         else if(command.equals("newchild")) {
-            if(parts.getSize() == 3) {
-                if(fileIsOpened()) addChild(parts[1], parts[2]);
-            }
-            else if(parts.getSize() == 4) {
-                if(fileIsOpened()) addChild(parts[1], parts[2], parts[3]);
-            }
+            if(fileIsOpened()) addChild(parts[1], parts[2]);
         }
         else if(command.equals("removechild")) {
             if(fileIsOpened()) removeElement(parts[1], parts[2]);
@@ -260,9 +266,9 @@ void Engine::run() {
             system("CLS");
         }
         else if(command.equals("settext")) {
-            if(fileIsOpened()) setText(parts[1], parts[2]);
+            if(fileIsOpened()) setText(parts[1]);
         }
-        else if(command.equals("xmlpath")) {
+        else if(command.equals("xpath")) {
             if(fileIsOpened()) xmlPath(parts[1]);
         }
         }
