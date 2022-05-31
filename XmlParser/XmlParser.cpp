@@ -83,7 +83,27 @@ void XmlParser::minify() {
             minifiedContent += fileContent.charAt(iter++);
         }
     }
-    fileContent = minifiedContent;
+    minifiedContent = minifiedContent.trim();
+    fileContent = minifiedContent.substring(0, minifiedContent.getLength() - 1);
+}
+
+void XmlParser::parseNodeByTagInfo(const String& tagInfo, XmlElement& node) const {
+    int startIndex = tagInfo.indexOf(" ");
+    String type = tagInfo.substring(0, startIndex);
+    node.setType(type);
+    bool isInParenthesis = false;
+    for(int i = (startIndex++) + 1; i < tagInfo.getLength(); i++) {
+        if(!isInParenthesis && tagInfo.charAt(i) == '\"') {
+            isInParenthesis = true;
+        }
+        else if(isInParenthesis && tagInfo.charAt(i) == '\"') {
+            String attributeStr = tagInfo.substring(startIndex, i);
+            ArrayList<String> attributeData = attributeStr.split("=\"");
+            node.setAttribute(attributeData[0], attributeData[1]);
+            startIndex = i + 2;
+            isInParenthesis = false;
+        }
+    }
 }
 
 void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const XmlElement* parent) const {
@@ -92,17 +112,9 @@ void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const Xml
         tagInfo += elementTextContent.charAt(iter);
         iter++;
     }
-    ArrayList<String> tagElements = tagInfo.split(" ");
-    XmlElement node(tagElements[0], DEFAULT_ID, DEFAULT_TEXT_CONTENT, (XmlElement*)parent);
-    for(int i = 1; i < tagElements.getSize(); i++) {
-        ArrayList<String> attribute = tagElements[i].split("=");
-        attribute[1] = (attribute[1].charAt(0) == '"') ? attribute[1].substring(1, attribute[1].getLength() - 1)
-        : attribute[1];
-        attribute[0] = (attribute[0].charAt(0) == '"') ? attribute[0].substring(1, attribute[0].getLength() - 1)
-        : attribute[0];
-        if(attribute[0] == "id") node.setId(attribute[1]);
-        node.setAttribute(attribute[0], attribute[1]);
-    }
+    XmlElement node;
+    parseNodeByTagInfo(tagInfo, node);
+    node.setParent(parent);
     iter++;
     String textContent;
     while(elementTextContent.charAt(iter) != '<') {

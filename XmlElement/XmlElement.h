@@ -24,6 +24,7 @@ public:
     bool setTextContent(const String& textContent);
     bool setParent(const XmlElement*);
     bool setId(const String& id);
+    bool setType(const String&);
     bool removeChild(XmlElement*);
     bool remove();
     bool setAttribute(const String& key, const String& value);

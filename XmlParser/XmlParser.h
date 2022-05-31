@@ -16,6 +16,7 @@ public:
     bool fileIsOpened() const;
     void loadFileContent();
     void minify();
+    void parseNodeByTagInfo(const String&, XmlElement&) const;
     void parseTree(XmlTree&) const;
     const String& getFilePath() const;
 };

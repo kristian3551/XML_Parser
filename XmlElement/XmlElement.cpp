@@ -40,6 +40,10 @@ bool XmlElement::setId(const String& id) {
     this->id = id;
     return true;
 }
+bool XmlElement::setType(const String& type) {
+    this->type = type;
+    return true;
+}
 bool XmlElement::setAttribute(const String& key, const String& value) {
     return attributes.setValue(key, value);
 }
