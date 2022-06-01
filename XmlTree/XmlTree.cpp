@@ -110,7 +110,6 @@ void XmlTree::addChild(const String& id, const XmlElement& el) {
         throw String("There is no such element");
     String idToBeAdded;
     XmlElement elToBeAdded = el;
-    elToBeAdded.setParent(parent);
     if(!ids.hasKey(el.getId()))
         idToBeAdded = el.getId();
     else idToBeAdded = el.getId().concat("_").concat(String(countOfElements));

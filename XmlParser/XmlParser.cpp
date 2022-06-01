@@ -6,7 +6,6 @@ using namespace std;
 XmlParser::XmlParser(const String& filePath) {
     this->filePath = filePath;
     loadFileContent();
-    iter = 0;
 }
 
 void XmlParser::setFilePath(const String& filePath) {
@@ -106,7 +105,7 @@ void XmlParser::parseNodeByTagInfo(const String& tagInfo, XmlElement& node) cons
     }
 }
 
-void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const XmlElement* parent) const {
+void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const XmlElement* parent, int& iter) const {
     String tagInfo;
     while(elementTextContent.charAt(iter) != '>') {
         tagInfo += elementTextContent.charAt(iter);
@@ -125,18 +124,18 @@ void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const Xml
     tree.addChild(parent->getId(), node);
     iter++;
     if(elementTextContent.charAt(iter) != '/')
-        parse(elementTextContent, tree, tree.getLastChild(parent->getId()));
+        parse(elementTextContent, tree, tree.getLastChild(parent->getId()), iter);
     while(elementTextContent.charAt(iter) != '>') {
         iter++;
     }
     iter++;
     iter++;
     if(elementTextContent.charAt(iter) != 0 && elementTextContent.charAt(iter) != '/')
-        parse(elementTextContent, tree, parent);
+        parse(elementTextContent, tree, parent, iter);
 }
 
 void XmlParser::parseTree(XmlTree& tree) const {
     if(fileContent.getLength() <= 1) return;
-    parse(fileContent.substring(1), tree, tree.getRoot());
-    iter = 0;
+    int iter = 0;
+    parse(fileContent.substring(1), tree, tree.getRoot(), iter);
 }

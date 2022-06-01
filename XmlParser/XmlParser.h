@@ -7,9 +7,8 @@
 class XmlParser {
     String filePath;
     String fileContent;
-    mutable int iter;
     void parse(const String&, XmlTree&,
-     const XmlElement*) const;
+     const XmlElement*, int&) const;
 public:
     XmlParser(const String& filePath = String());
     void setFilePath(const String&);
