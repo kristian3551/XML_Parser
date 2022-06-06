@@ -6,7 +6,7 @@
 
 class XmlPath {
 public:
-    static const ArrayList<XmlElement*> getElements(const String&, const XmlTree&);   
+    static ArrayList<const XmlElement*> getElements(const String&, const XmlTree&);   
 };
 
 #endif

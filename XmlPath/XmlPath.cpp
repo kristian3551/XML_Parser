@@ -2,9 +2,9 @@
 #include <iostream>
 using namespace std;
 
-const ArrayList<XmlElement*> XmlPath::getElements(const String& xmlPath, const XmlTree& tree) {
+ArrayList<const XmlElement*> XmlPath::getElements(const String& xmlPath, const XmlTree& tree) {
     ArrayList<String> parts = xmlPath.split("/");
-    ArrayList<XmlElement*> elementsToFind;
+    ArrayList<const XmlElement*> elementsToFind;
     for(int i = 0; i < parts.getSize(); i++) {
         int attributeIndexStart = parts[i].indexOf("(");
         int childIndexStart = parts[i].indexOf("[");
@@ -19,17 +19,20 @@ const ArrayList<XmlElement*> XmlPath::getElements(const String& xmlPath, const X
                 else elementsToFind += tree.getRoot()->getChildren()[0]->getChildrenByType(tagName.substring(1));
             }
         else {
-            ArrayList<XmlElement*> updatedElementsToFind;
+            ArrayList<const XmlElement*> updatedElementsToFind;
             for(int j = 0; j < elementsToFind.getSize(); j++) {
-                updatedElementsToFind += elementsToFind[j]->getChildrenByType(tagName);
-            }
+                if(tagName == "*") {
+                        updatedElementsToFind += elementsToFind[j]->getChildren();
+                    }
+                    else updatedElementsToFind += elementsToFind[j]->getChildrenByType(tagName);
+                }
             elementsToFind = updatedElementsToFind;
         }
         if(parts[i].endsWith(")")) {
             String attributeData = parts[i].substring(attributeIndexStart + 1, parts[i].getLength() - 1);
             if(attributeData.contains("&")) {
                 String attributeType = attributeData.substring(1);
-                ArrayList<XmlElement*> updatedElementsToFind;
+                ArrayList<const XmlElement*> updatedElementsToFind;
                 for(int j = 0; j < elementsToFind.getSize(); j++) {
                    if(elementsToFind[j]->hasAttribute(attributeType))
                         updatedElementsToFind += elementsToFind[j];
@@ -38,7 +41,7 @@ const ArrayList<XmlElement*> XmlPath::getElements(const String& xmlPath, const X
             }
             else {
                 ArrayList<String> pair = attributeData.split("=");
-                ArrayList<XmlElement*> updatedElementsToFind;
+                ArrayList<const XmlElement*> updatedElementsToFind;
                 for(int j = 0; j < elementsToFind.getSize(); j++) {
                     if(elementsToFind[j]->hasAttribute(pair[0], pair[1]))
                         updatedElementsToFind += elementsToFind[j];
@@ -49,7 +52,7 @@ const ArrayList<XmlElement*> XmlPath::getElements(const String& xmlPath, const X
         else if(parts[i].endsWith("]")) {
             String index = parts[i].substring(childIndexStart + 1, parts[i].getLength() - 1);
             int n = atoi(index.toString());
-            ArrayList<XmlElement*> updatedElementsToFind;
+            ArrayList<const XmlElement*> updatedElementsToFind;
             for(int j = 0; j < elementsToFind.getSize(); j++) {
                 updatedElementsToFind += elementsToFind[j]->getChildrenByIndex(n);
             }
