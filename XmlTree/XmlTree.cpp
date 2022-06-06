@@ -28,7 +28,7 @@ void XmlTree::print() const {
         root->getChildren()[i]->print(cout);
     }
 }
-const XmlElement* XmlTree::getElementById(const String& id, XmlElement* el) const {
+const XmlElement* XmlTree::getElementById(const String& id, const XmlElement* el) const {
     if(el->getId() == id) return el;
     for(int i = 0; i < el->getChildren().getSize(); i++) {
         const XmlElement* res = getElementById(id, el->getChildren()[i]);
@@ -41,7 +41,7 @@ const XmlElement* XmlTree::getElementById(const String& id, XmlElement* el) cons
 XmlElement* XmlTree::getElementById(const String& id, XmlElement* el) {
     if(el->getId() == id) return el;
     for(int i = 0; i < el->getChildren().getSize(); i++) {
-        XmlElement* res = getElementById(id, el->getChildren()[i]);
+        XmlElement* res = getElementById(id, (XmlElement*)el->getChildren()[i]);
         if(res != nullptr) {
             return res;
         }
@@ -92,12 +92,6 @@ const XmlElement* XmlTree::getLastChild(const String& id) const {
         throw String("Element has no children");
     return el->getLastChild();
 }
-void XmlTree::changeTextContent(const String& id, const String& textContent) {
-    XmlElement* el = getElementById(id, root);
-    if(el == nullptr)
-        throw String("There is no such element");
-    el->setTextContent(textContent);
-}
 bool XmlTree::deleteAttribute(const String& id, const String& key) {
     XmlElement* el = getElementById(id, root);
     if(el == nullptr)
@@ -139,6 +133,7 @@ bool XmlTree::removeChild(const String& parentId, const String& childId) {
     XmlElement* el = getElementById(parentId, root);
     XmlElement* child = getElementById(childId, root);
     if(el == nullptr) return false;
+    ids.remove(childId);
     return el->removeChild(child);
 }
 
@@ -146,11 +141,12 @@ bool XmlTree::remove(const String& id) {
     XmlElement* el = getElementById(id, root);
     if(el == nullptr) return false;
     el->remove();
+    ids.remove(id);
     return true;
 }
 
-const ArrayList<XmlElement*> XmlTree::getElementsByTagName(const String& tagName) const {
-    ArrayList<XmlElement*> list;
+ArrayList<const XmlElement*> XmlTree::getElementsByTagName(const String& tagName) const {
+    ArrayList<const XmlElement*> list;
     for(int i = 0; i < ids.getSize(); i++) {
         if(ids.getPairs()[i].second->getType() == tagName) 
             list.push(ids.getPairs()[i].second);
@@ -158,8 +154,8 @@ const ArrayList<XmlElement*> XmlTree::getElementsByTagName(const String& tagName
     return list;
 }
 
-const ArrayList<XmlElement*> XmlTree::getElementsByAttribute(const String& attribute, const String& value) const {
-    ArrayList<XmlElement*> list;
+ArrayList<const XmlElement*> XmlTree::getElementsByAttribute(const String& attribute, const String& value) const {
+    ArrayList<const XmlElement*> list;
     for(int i = 0; i < ids.getSize(); i++) {
         if(value == String())
             if(ids.getPairs()[i].second->getAttributes().hasKey(attribute)) 
@@ -169,4 +165,11 @@ const ArrayList<XmlElement*> XmlTree::getElementsByAttribute(const String& attri
             list.push(ids.getPairs()[i].second);
     }
     return list;
+}
+
+ArrayList<const XmlElement*> XmlTree::getDescendants(const String& id) const {
+    const XmlElement* el = getElementById(id, root);
+    if(el == nullptr) 
+        throw String("There is no such element");
+    return el->getDescendants(el);
 }

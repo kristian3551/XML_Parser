@@ -7,9 +7,9 @@
 class XmlTree {
     XmlElement* root;
     unsigned countOfElements = 0;
-    Dictionary<String, XmlElement*> ids;    
+    Dictionary<String, const XmlElement*> ids;    
     XmlElement* getElementById(const String& id, XmlElement*);
-    const XmlElement* getElementById(const String& id, XmlElement*) const;
+    const XmlElement* getElementById(const String& id, const XmlElement*) const;
 public:
     XmlTree();
     XmlTree(const XmlElement& root);
@@ -27,14 +27,14 @@ public:
     const XmlElement* getChildByIndex(const String& id, int index) const;
     const XmlElement* getLastChild(const String& id) const;
     const XmlElement* getParent(const String& id) const;
-    void changeTextContent(const String& id, const String& textContent);
     bool deleteAttribute(const String& id, const String& key);
     void addChild(const String& id, const XmlElement& el);
     const XmlElement* getElement(const String& id) const;
     bool removeChild(const String&, const String&);
     bool remove(const String& id);
-    const ArrayList<XmlElement*> getElementsByTagName(const String& tagName) const;
-    const ArrayList<XmlElement*> getElementsByAttribute(const String& attribute, const String& value = String()) const;
+    ArrayList<const XmlElement*> getElementsByTagName(const String& tagName) const;
+    ArrayList<const XmlElement*> getElementsByAttribute(const String& attribute, const String& value = String()) const;
+    ArrayList<const XmlElement*> getDescendants(const String& id) const;
     void clear();
 };
 

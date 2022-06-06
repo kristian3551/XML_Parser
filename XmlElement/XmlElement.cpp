@@ -60,8 +60,8 @@ bool XmlElement::hasAttribute(const String& key, const String& value) const {
         return false;
     }
 }
-const ArrayList<XmlElement*> XmlElement::getChildrenByAttribute(const String& key, const String& value) const {
-    ArrayList<XmlElement*> res;
+ArrayList<const XmlElement*> XmlElement::getChildrenByAttribute(const String& key, const String& value) const {
+    ArrayList<const XmlElement*> res;
     for(int i = 0; i < children.getSize(); i++) {
         if(children[i]->hasAttribute(key, value)) {
             res.push(children[i]);
@@ -69,18 +69,26 @@ const ArrayList<XmlElement*> XmlElement::getChildrenByAttribute(const String& ke
     }
     return res;
 }
-const ArrayList<XmlElement*> XmlElement::getChildrenByIndex(int index) const {
-    ArrayList<XmlElement*> res;
+ArrayList<const XmlElement*> XmlElement::getChildrenByIndex(int index) const {
+    ArrayList<const XmlElement*> res;
     if(index < 0 || index >= children.getSize()) return res;
     res.push(children[index]);
     return res;
 }
-const ArrayList<XmlElement*> XmlElement::getChildrenByType(const String& type) const {
-    ArrayList<XmlElement*> res;
+ArrayList<const XmlElement*> XmlElement::getChildrenByType(const String& type) const {
+    ArrayList<const XmlElement*> res;
     for(int i = 0; i < children.getSize(); i++) {
         if(children[i]->getType() == type) {
             res.push(children[i]);
         }
+    }
+    return res;
+}
+ArrayList<const XmlElement*> XmlElement::getDescendants(const XmlElement* current) const {
+    ArrayList<const XmlElement*> res;
+    for(int i = 0; i < current->getChildren().getSize(); i++) {
+        res.push(current->getChildren()[i]);
+        res += getDescendants(current->getChildren()[i]);
     }
     return res;
 }
@@ -92,8 +100,12 @@ const XmlElement* XmlElement::getChild(int index) const {
         throw String("Invalid index");
     return children[index];
 }
-const ArrayList<XmlElement*> XmlElement::getChildren() const {
-    return children;
+ArrayList<const XmlElement*> XmlElement::getChildren() const {
+    ArrayList<const XmlElement*> res;
+    for(int i = 0; i < children.getSize(); i++) {
+        res.push(children[i]);
+    }
+    return res;
 }
 const XmlElement* XmlElement::getLastChild() const {
     if(children.getSize() == 0) return nullptr;

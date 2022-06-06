@@ -29,12 +29,13 @@ public:
     bool remove();
     bool setAttribute(const String& key, const String& value);
     bool hasAttribute(const String& key, const String& value = String()) const;
-    const ArrayList<XmlElement*> getChildrenByType(const String& type) const;
-    const ArrayList<XmlElement*> getChildrenByAttribute(const String& key, const String& value = String()) const;
-    const ArrayList<XmlElement*> getChildrenByIndex(int index) const;
+    ArrayList<const XmlElement*> getChildrenByType(const String& type) const;
+    ArrayList<const XmlElement*> getChildrenByAttribute(const String& key, const String& value = String()) const;
+    ArrayList<const XmlElement*> getChildrenByIndex(int index) const;
+    ArrayList<const XmlElement*> getDescendants(const XmlElement*) const;
     bool removeAttribute(const String& key);
     const XmlElement* getChild(int index) const;
-    const ArrayList<XmlElement*> getChildren() const;
+    ArrayList<const XmlElement*> getChildren() const;
     const XmlElement* getLastChild() const;
     const String& getText() const;
     const String& getId() const;
