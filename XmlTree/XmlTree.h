@@ -7,7 +7,7 @@
 class XmlTree {
     XmlElement* root;
     unsigned countOfElements = 0;
-    Dictionary<String, const XmlElement*> ids;    
+    Dictionary<String, XmlElement*> ids;    
     XmlElement* getElementById(const String& id, XmlElement*);
     const XmlElement* getElementById(const String& id, const XmlElement*) const;
 public:
@@ -30,7 +30,6 @@ public:
     bool deleteAttribute(const String& id, const String& key);
     void addChild(const String& id, const XmlElement& el);
     const XmlElement* getElement(const String& id) const;
-    bool removeChild(const String&, const String&);
     bool remove(const String& id);
     ArrayList<const XmlElement*> getElementsByTagName(const String& tagName) const;
     ArrayList<const XmlElement*> getElementsByAttribute(const String& attribute, const String& value = String()) const;

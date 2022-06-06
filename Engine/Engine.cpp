@@ -184,12 +184,6 @@ void Engine::addChild(const String& id, const String& type) {
     cout << "Successfully added child." << endl;
     hasChanged = true;
 }
-void Engine::removeElement(const String& parentId, const String& childId) {
-    bool res = tree.removeChild(parentId, childId);
-    if(res) cout << "Successfully removed child of element " << parentId << endl;
-    else cout << "Child removed unsuccessfully!" << endl;
-    hasChanged = true;
-}
 void Engine::remove(const String& id) {
     try {
         tree.remove(id);
@@ -272,9 +266,6 @@ void Engine::run() {
         }
         else if(command.equals("newchild")) {
             if(fileIsOpened()) addChild(parts[1], parts[2]);
-        }
-        else if(command.equals("removechild")) {
-            if(fileIsOpened()) removeElement(parts[1], parts[2]);
         }
         else if(command.equals("parent")) {
             if(fileIsOpened()) printParent(parts[1]);

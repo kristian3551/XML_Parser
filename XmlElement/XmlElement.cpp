@@ -7,7 +7,6 @@ XmlElement::XmlElement(const String& type, const String& id,
          this->type = type;
          this->id = id;
          this->textContent = textContent;
-         this->parent = parent;
      }
 bool XmlElement::addChild(const String& type, const String& id,
 const String& textContent, XmlElement* parent) {
@@ -19,21 +18,18 @@ bool XmlElement::addChild(const XmlElement& el) {
     XmlElement* child = new XmlElement(el);
     return this->children.push(child);
 }
-bool XmlElement::removeChild(XmlElement* el) {
-    bool res = this->children.remove(el);
-    if(res) freeElement(el);
-    return res;
-}
-bool XmlElement::remove() {
-    parent->removeChild(this);
-    return true;
+bool XmlElement::removeChild(const String& id) {
+    for(int i = 0; i < children.getSize(); i++) {
+        if(children[i]->id == id) {
+            freeElement(children[i]);
+            children.removeByIndex(i);
+            return true;
+        }
+    }
+    return false;
 }
 bool XmlElement::setTextContent(const String& textContent) {
     this->textContent = textContent;
-    return true;
-}
-bool XmlElement::setParent(const XmlElement* parent) {
-    this->parent = (XmlElement*)parent;
     return true;
 }
 bool XmlElement::setId(const String& id) {
@@ -59,6 +55,12 @@ bool XmlElement::hasAttribute(const String& key, const String& value) const {
     catch(const String& str) {
         return false;
     }
+}
+bool XmlElement::hasChild(const String& id) const {
+    for(int i = 0; i < children.getSize(); i++) {
+        if(children[i]->id == id) return true;
+    }
+    return false;
 }
 ArrayList<const XmlElement*> XmlElement::getChildrenByAttribute(const String& key, const String& value) const {
     ArrayList<const XmlElement*> res;
@@ -151,7 +153,4 @@ const String& XmlElement::getType() const {
 }
 const String& XmlElement::getId() const {
     return id;
-}
-const XmlElement* XmlElement::getParent() const {
-    return parent;
 }

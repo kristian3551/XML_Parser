@@ -7,6 +7,7 @@
 
 const String DEFAULT_ID = "def";
 const String DEFAULT_TEXT_CONTENT = "";
+const String DEFAULT_TYPE = "type";
 
 class XmlElement {
     String type;
@@ -14,32 +15,30 @@ class XmlElement {
     String textContent;
     ArrayList<XmlElement*> children;
     Dictionary<String, String> attributes;
-    XmlElement* parent;
 public:
-    XmlElement(const String& type = "defaultType", const String& id = DEFAULT_ID,
+    friend class XmlTree;
+    XmlElement(const String& type = DEFAULT_TYPE, const String& id = DEFAULT_ID,
      const String& textContent = DEFAULT_TEXT_CONTENT, XmlElement* parent = nullptr);
     bool addChild(const String& type, const String& id, 
     const String& textContent = DEFAULT_TEXT_CONTENT, XmlElement* parent = nullptr);
     bool addChild(const XmlElement& el);
     bool setTextContent(const String& textContent);
-    bool setParent(const XmlElement*);
     bool setId(const String& id);
     bool setType(const String&);
-    bool removeChild(XmlElement*);
-    bool remove();
+    bool removeChild(const String& id);
     bool setAttribute(const String& key, const String& value);
     bool hasAttribute(const String& key, const String& value = String()) const;
+    bool hasChild(const String& id) const;
     ArrayList<const XmlElement*> getChildrenByType(const String& type) const;
     ArrayList<const XmlElement*> getChildrenByAttribute(const String& key, const String& value = String()) const;
     ArrayList<const XmlElement*> getChildrenByIndex(int index) const;
-    ArrayList<const XmlElement*> getDescendants(const XmlElement*) const;
+    ArrayList<const XmlElement*> getDescendants(const XmlElement* el) const;
     bool removeAttribute(const String& key);
     const XmlElement* getChild(int index) const;
     ArrayList<const XmlElement*> getChildren() const;
     const XmlElement* getLastChild() const;
     const String& getText() const;
     const String& getId() const;
-    const XmlElement* getParent() const;
     const Dictionary<String, String>& getAttributes() const;
     const String& getType() const;
     void print(std::ostream& os, int k = 0) const;

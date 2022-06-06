@@ -113,7 +113,6 @@ void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const Xml
     }
     XmlElement node;
     parseNodeByTagInfo(tagInfo, node);
-    node.setParent(parent);
     iter++;
     String textContent;
     while(elementTextContent.charAt(iter) != '<') {

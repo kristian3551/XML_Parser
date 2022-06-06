@@ -41,7 +41,7 @@ const XmlElement* XmlTree::getElementById(const String& id, const XmlElement* el
 XmlElement* XmlTree::getElementById(const String& id, XmlElement* el) {
     if(el->getId() == id) return el;
     for(int i = 0; i < el->getChildren().getSize(); i++) {
-        XmlElement* res = getElementById(id, (XmlElement*)el->getChildren()[i]);
+        XmlElement* res = getElementById(id, el->children[i]);
         if(res != nullptr) {
             return res;
         }
@@ -110,13 +110,13 @@ void XmlTree::addChild(const String& id, const XmlElement& el) {
     countOfElements++;
     elToBeAdded.setId(idToBeAdded);
     parent->addChild(elToBeAdded);
-    ids.add(idToBeAdded, parent->getChildren()[parent->getChildren().getSize() - 1]);
+    ids.add(idToBeAdded, parent->children[parent->children.getSize() - 1]);
 }
 const XmlElement* XmlTree::getParent(const String& id) const {
-    const XmlElement* el = getElementById(id, root);
-    if(el == nullptr) 
-        throw String("There is no such element");
-    return el->getParent();
+    for(int i = 0; i < ids.getSize(); i++) {
+        if(ids.getPairs()[i].second->hasChild(id)) return ids.getPairs()[i].second;
+    }
+    throw String("There is no such element");
 }
 
 const XmlElement* XmlTree::getElement(const String& id) const {
@@ -129,20 +129,13 @@ void XmlTree::clear() {
     countOfElements = 0;
 }
 
-bool XmlTree::removeChild(const String& parentId, const String& childId) {
-    XmlElement* el = getElementById(parentId, root);
-    XmlElement* child = getElementById(childId, root);
-    if(el == nullptr) return false;
-    ids.remove(childId);
-    return el->removeChild(child);
-}
-
 bool XmlTree::remove(const String& id) {
-    XmlElement* el = getElementById(id, root);
-    if(el == nullptr) return false;
-    el->remove();
-    ids.remove(id);
-    return true;
+    for(int i = 0; i < ids.getSize(); i++) {
+        if(ids.getPairs()[i].second->removeChild(id)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 ArrayList<const XmlElement*> XmlTree::getElementsByTagName(const String& tagName) const {
