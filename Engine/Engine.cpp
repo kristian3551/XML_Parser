@@ -47,10 +47,12 @@ void Engine::closeFile() {
 void Engine::saveFile() {
     tree.saveInFile(parser.getFilePath());
     cout << "Successfully saved " << parser.getFilePath() << endl;
+    hasChanged = false;
 }
 void Engine::saveAs(const String& filePath) {
     tree.saveInFile(filePath);
     cout << "Successfully saved file in " << parser.getFilePath() << endl;
+    hasChanged = false;
 }
 void Engine::help() {
     cout << "The following commands are supported: " << endl;
@@ -68,14 +70,14 @@ void Engine::help() {
     cout << "  text <id>                          \t\t\tprints text of element with <id>" << endl;
     cout << "  settext <id>                       \t\t\tsets textContent of element with <id> to <newText>" << endl;
     cout << "  delete <id> <key>                  \t\t\tremoves attribute <key> from element with <id>" << endl;
-    cout << "  addchild <id> <type> <?textContent>\t\t\tcreates child element if <type> to element <id> (textContent is optional)" << endl;
+    cout << "  addchild <id> <type>               \t\t\tcreates child element if <type> to element <id>" << endl;
     cout << "  removechild <parentId> <childId>   \t\t\tremoves element with <childId> given <parentId>" << endl;
     cout << "  remove <id>                        \t\t\tremoves element with <id>" << endl;
-    cout << "  xpath <xmlPath>                  \t\t\tperforms basic XPath requests" << endl;
+    cout << "  xpath <xmlPath>                    \t\t\tperforms basic XPath requests" << endl;
     
 }
 bool Engine::exit() {
-    if(parser.getFilePath() != String()) {
+    if(parser.getFilePath() != String() && hasChanged) {
         cout << "You have an open file with unsaved changes, please select close or save first." << endl;
         return false;
     }
@@ -99,6 +101,7 @@ void Engine::setAttribute(const String& id, const String& key,
     const String& value) {
     try {
         tree.setAttribute(id, key, value);
+        hasChanged = true;
     }
     catch(const String& str) {
         cout << str << endl;
@@ -148,6 +151,7 @@ void Engine::setText(const String& id) {
     try {
         tree.setText(id, text);
         cout << "Successfully set textContent to " << id << endl;
+        hasChanged = true;
     }
     catch(const String& str) {
         cout << str << endl;
@@ -158,6 +162,7 @@ void Engine::removeAttribute(const String& id, const String& key) {
         bool res = tree.deleteAttribute(id, key);
         if(res) cout << "Successfully removed attribute to an XML element" << endl;
         else cout << "Attribute removed unsuccessfully" << endl;
+        hasChanged = true;
     }
     catch(const String& str) {
         cout << str << endl;
@@ -177,16 +182,19 @@ void Engine::addChild(const String& id, const String& type) {
         return;
     }
     cout << "Successfully added child." << endl;
+    hasChanged = true;
 }
 void Engine::removeElement(const String& parentId, const String& childId) {
     bool res = tree.removeChild(parentId, childId);
     if(res) cout << "Successfully removed child of element " << parentId << endl;
     else cout << "Child removed unsuccessfully!" << endl;
+    hasChanged = true;
 }
 void Engine::remove(const String& id) {
     try {
         tree.remove(id);
         cout << "Successfully removed element" << endl;
+        hasChanged = true;
     }
     catch(const String& str)
     {
@@ -195,11 +203,24 @@ void Engine::remove(const String& id) {
     
 }
 void Engine::xmlPath(const String& xmlPath) {
-    const ArrayList<XmlElement*> elementsToFind = XmlPath::getElements(xmlPath, tree);
+    ArrayList<const XmlElement*> elementsToFind = XmlPath::getElements(xmlPath, tree);
     cout << "Elements: " << endl;
     for(int i = 0; i < elementsToFind.getSize(); i++) {
         elementsToFind[i]->print(cout);
     }
+}
+void Engine::printDescendants(const String& id) {
+    try {
+        ArrayList<const XmlElement*> res = tree.getDescendants(id);
+        cout << "Descendants: " << endl;
+        for(int i = 0; i < res.getSize(); i++) {
+            res[i]->print(cout);
+        }
+    }
+    catch(const String& str) {
+        cout << str << endl;
+    }
+    
 }
 void Engine::run() {
     cout << "Welcome to XML Parser app. To continue, please enter a command or type \"help\" for more information." << endl;
@@ -209,8 +230,7 @@ void Engine::run() {
         cin >> input;
         ArrayList<String> parts = input.split(" ");
         String command = parts[0];
-        try
-        {
+    try {
         if(command.equals("open")) {
             openFile(input.substring(parts[0].getLength() + 1));
         }
@@ -271,8 +291,11 @@ void Engine::run() {
         else if(command.equals("xpath")) {
             if(fileIsOpened()) xmlPath(parts[1]);
         }
+        
+        else if(command.equals("descendants")) {
+            printDescendants(parts[1]);
         }
-        catch(int value)
+        } catch(int value)
         {
             cout << "Input error!" << endl;
         }

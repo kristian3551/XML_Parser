@@ -7,6 +7,7 @@
 class Engine {
     XmlParser parser;
     XmlTree tree;
+    bool hasChanged = false;
     void openFile(const String&);
     void closeFile();
     void saveFile();
@@ -28,6 +29,7 @@ class Engine {
     void removeElement(const String& parentId, const String& childId);
     void remove(const String& id);
     void xmlPath(const String& xmlPath);
+    void printDescendants(const String& id);
     bool fileIsOpened() const;
 public:
     void run();
