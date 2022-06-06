@@ -16,6 +16,8 @@ protected:
 public:
     ArrayList();
     ArrayList(const ArrayList<T>&);
+    ArrayList(ArrayList<T>&&);
+    ArrayList<T>& operator=(ArrayList<T>&&);
     ArrayList<T>& operator=(const ArrayList<T>&);
     bool push(const T&);
     bool push(T&&);
@@ -32,7 +34,22 @@ public:
     void clear();
     ~ArrayList();
 };
-
+template <typename T>
+ArrayList<T>::ArrayList(ArrayList<T>&& other) {
+    data = other.data;
+    other.data = nullptr;
+    capacity = other.capacity;
+    size = other.size;
+}
+template <typename T>
+ArrayList<T>& ArrayList<T>::operator=(ArrayList<T>&& other) {
+    free();
+    data = other.data;
+    other.data = nullptr;
+    capacity = other.capacity;
+    size = other.size;
+    return *this;
+}
 template <typename T>
 void ArrayList<T>::resize() {
     capacity *= 2;
