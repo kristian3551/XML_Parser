@@ -27,13 +27,12 @@ void Engine::openFile(const String& filePath) {
     parser = XmlParser(filePath);
     try {
         parser.parseTree(tree);
+        cout << "Successfully opened " << filePath << endl;
     }
-    catch(...) {
+    catch(const String& str) {
         parser.setFilePath("");
-        cout << "Parsing error!" << endl;
+        cout << str << endl;
     }
-    
-    cout << "Successfully opened " << filePath << endl;
 }
 void Engine::closeFile() {
     if(parser.getFilePath() != String()) {
@@ -186,9 +185,12 @@ void Engine::addChild(const String& id, const String& type) {
 }
 void Engine::remove(const String& id) {
     try {
-        tree.remove(id);
-        cout << "Successfully removed element" << endl;
-        hasChanged = true;
+        bool res = tree.remove(id);
+        if(res) {
+            cout << "Successfully removed element" << endl;
+            hasChanged = true;
+        }
+        else cout << "Element couldn't be found!" << endl;
     }
     catch(const String& str)
     {

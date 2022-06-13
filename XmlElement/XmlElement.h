@@ -26,6 +26,7 @@ public:
     bool setId(const String& id);
     bool setType(const String&);
     bool removeChild(const String& id);
+    static bool removeDescendant(const String& id, XmlElement*);
     bool setAttribute(const String& key, const String& value);
     bool hasAttribute(const String& key, const String& value = String()) const;
     bool hasChild(const String& id) const;

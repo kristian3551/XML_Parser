@@ -7,7 +7,7 @@
 class XmlTree {
     XmlElement* root;
     unsigned countOfElements = 0;
-    Dictionary<String, XmlElement*> ids;    
+    Dictionary<String, const XmlElement*> ids;    
     XmlElement* getElementById(const String& id, XmlElement*);
     const XmlElement* getElementById(const String& id, const XmlElement*) const;
 public:

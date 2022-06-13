@@ -28,6 +28,18 @@ bool XmlElement::removeChild(const String& id) {
     }
     return false;
 }
+bool XmlElement::removeDescendant(const String& id, XmlElement* el) {
+    for(int i = 0; i < el->children.getSize(); i++) {
+        if(el->children[i]->getId() == id) {
+            el->children.removeByIndex(i);
+            return true;
+        }
+        else if(removeDescendant(id, el->children[i])) {
+            return true;
+        }
+    }
+    return false;
+}
 bool XmlElement::setTextContent(const String& textContent) {
     this->textContent = textContent;
     return true;
