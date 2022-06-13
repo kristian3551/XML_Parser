@@ -3,6 +3,8 @@
 #include <iostream>
 using namespace std;
 
+const int EXCEPTION_PLACE_WIDTH = 20;
+
 XmlParser::XmlParser(const String& filePath) {
     this->filePath = filePath;
     loadFileContent();
@@ -107,25 +109,37 @@ void XmlParser::parseNodeByTagInfo(const String& tagInfo, XmlElement& node) cons
 
 void XmlParser::parse(const String& elementTextContent, XmlTree& tree, const XmlElement* parent, int& iter) const {
     String tagInfo;
+    int searchingStartingIndex = iter;
     while(elementTextContent.charAt(iter) != '>') {
         tagInfo += elementTextContent.charAt(iter);
         iter++;
+        if(iter >= elementTextContent.getLength() || elementTextContent.charAt(iter) == '<')
+            throw String("Parsing error! \n... ").concat(elementTextContent.substring(searchingStartingIndex - EXCEPTION_PLACE_WIDTH, searchingStartingIndex + EXCEPTION_PLACE_WIDTH))
+            .concat(String("... \nThere is a missing '>'"));
     }
     XmlElement node;
     parseNodeByTagInfo(tagInfo, node);
     iter++;
     String textContent;
+    searchingStartingIndex = iter;
     while(elementTextContent.charAt(iter) != '<') {
         textContent += elementTextContent.charAt(iter);
         iter++;
+        if(iter >= elementTextContent.getLength() || elementTextContent.charAt(iter) == '>')
+            throw String("Parsing error! \n... ").concat(elementTextContent.substring(iter - EXCEPTION_PLACE_WIDTH, iter + EXCEPTION_PLACE_WIDTH))
+            .concat(String("... \nThere is a missing '<'"));
     }
     node.setTextContent(textContent);
     tree.addChild(parent->getId(), node);
     iter++;
     if(elementTextContent.charAt(iter) != '/')
         parse(elementTextContent, tree, tree.getLastChild(parent->getId()), iter);
+    searchingStartingIndex = iter;
     while(elementTextContent.charAt(iter) != '>') {
         iter++;
+         if(iter >= elementTextContent.getLength() || elementTextContent.charAt(iter) == '<')
+            throw String("Parsing error! \n... ").concat(elementTextContent.substring(searchingStartingIndex - EXCEPTION_PLACE_WIDTH, searchingStartingIndex + EXCEPTION_PLACE_WIDTH))
+            .concat(String("... \nThere is a missing '>'"));
     }
     iter++;
     iter++;
