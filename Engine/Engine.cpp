@@ -288,6 +288,9 @@ void Engine::run() {
         else if(command.equals("descendants")) {
             printDescendants(parts[1]);
         }
+        else {
+            cout << "Wrong command. Type 'help' to learn more." << endl;
+        }
         } catch(int value)
         {
             cout << "Input error!" << endl;

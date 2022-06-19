@@ -9,13 +9,13 @@ class XmlParser {
     String fileContent;
     void parse(const String&, XmlTree&,
      const XmlElement*, int&) const;
+    void loadFileContent();
+    void minify();
+    void parseNodeByTagInfo(const String&, XmlElement&) const;
 public:
     XmlParser(const String& filePath = String());
     void setFilePath(const String&);
     bool fileIsOpened() const;
-    void loadFileContent();
-    void minify();
-    void parseNodeByTagInfo(const String&, XmlElement&) const;
     void parseTree(XmlTree&) const;
     const String& getFilePath() const;
 };

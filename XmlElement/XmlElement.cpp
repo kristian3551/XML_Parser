@@ -8,12 +8,6 @@ XmlElement::XmlElement(const String& type, const String& id,
          this->id = id;
          this->textContent = textContent;
      }
-bool XmlElement::addChild(const String& type, const String& id,
-const String& textContent, XmlElement* parent) {
-    XmlElement* child = new XmlElement(type, id, textContent, parent);
-    this->children.push(child);
-    return true;
-}
 bool XmlElement::addChild(const XmlElement& el) {
     XmlElement* child = new XmlElement(el);
     return this->children.push(child);
@@ -114,6 +108,9 @@ const XmlElement* XmlElement::getChild(int index) const {
         throw String("Invalid index");
     return children[index];
 }
+ArrayList<XmlElement*> XmlElement::getChildren() {
+    return children;
+}
 ArrayList<const XmlElement*> XmlElement::getChildren() const {
     ArrayList<const XmlElement*> res;
     for(int i = 0; i < children.getSize(); i++) {
@@ -127,6 +124,25 @@ const XmlElement* XmlElement::getLastChild() const {
 }
 const String& XmlElement::getText() const {
     return textContent;
+}
+void XmlElement::saveInFile(std::ostream& os, int k) const {
+    for(int i = 0; i < k; i++)
+        os << "\t";
+    os << "<" << type;
+    if(!id.startsWith("def")) os << " id=\"" << id << "\"";
+    for(int i = 0; i < attributes.getSize(); i++) {
+        if(attributes.getPairs()[i].first != "id") os << " " << attributes.getPairs()[i].first << "="
+        << "\"" << attributes.getPairs()[i].second << "\"";
+    }
+    os << ">";
+    os << textContent;
+    if(!this->children.isEmpty()) os << endl;
+    for(int i = 0; i < this->children.getSize(); i++) {
+        this->children[i]->saveInFile(os, k + 1);
+    }
+    if(!this->children.isEmpty()) for(int i = 0; i < k; i++)
+        os << "\t";
+    os << "</" << type << ">" << endl;
 }
 void XmlElement::print(std::ostream& os, int k) const {
     for(int i = 0; i < k; i++)

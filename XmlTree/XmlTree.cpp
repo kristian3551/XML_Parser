@@ -3,9 +3,6 @@
 #include <fstream>
 using namespace std;
 
-XmlTree::XmlTree(const XmlElement& root) {
-    this->root = new XmlElement(root);
-}
 XmlTree::XmlTree() {
     this->root = new XmlElement("wrapper", "rootId");
 }
@@ -19,7 +16,7 @@ const XmlElement* XmlTree::getRoot() const {
 void XmlTree::saveInFile(const String& filePath) const {
     ofstream file(filePath.toString());
     for(int i = 0; i < root->getChildren().getSize(); i++) {
-        root->getChildren()[i]->print(file);
+        root->getChildren()[i]->saveInFile(file);
     }
 }
 
@@ -41,7 +38,7 @@ const XmlElement* XmlTree::getElementById(const String& id, const XmlElement* el
 XmlElement* XmlTree::getElementById(const String& id, XmlElement* el) {
     if(el->getId() == id) return el;
     for(int i = 0; i < el->getChildren().getSize(); i++) {
-        XmlElement* res = getElementById(id, el->children[i]);
+        XmlElement* res = getElementById(id, el->getChildren()[i]);
         if(res != nullptr) {
             return res;
         }
@@ -102,11 +99,9 @@ void XmlTree::addChild(const String& id, const XmlElement& el) {
     XmlElement* parent = getElementById(id, root);
     if(parent == nullptr) 
         throw String("There is no such element");
-    String idToBeAdded;
+    String idToBeAdded = el.getId();
     XmlElement elToBeAdded = el;
-    if(!ids.hasKey(el.getId()))
-        idToBeAdded = el.getId();
-    else idToBeAdded = el.getId().concat("_").concat(String(countOfElements));
+    if(idToBeAdded == "def") idToBeAdded = el.getId().concat("_").concat(String(countOfElements));
     countOfElements++;
     elToBeAdded.setId(idToBeAdded);
     parent->addChild(elToBeAdded);

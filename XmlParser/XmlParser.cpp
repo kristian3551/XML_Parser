@@ -101,6 +101,7 @@ void XmlParser::parseNodeByTagInfo(const String& tagInfo, XmlElement& node) cons
             String attributeStr = tagInfo.substring(startIndex, i);
             ArrayList<String> attributeData = attributeStr.split("=\"");
             node.setAttribute(attributeData[0], attributeData[1]);
+            if(attributeData[0] == "id") node.setId(attributeData[1]);
             startIndex = i + 2;
             isInParenthesis = false;
         }

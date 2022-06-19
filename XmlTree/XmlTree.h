@@ -12,7 +12,6 @@ class XmlTree {
     const XmlElement* getElementById(const String& id, const XmlElement*) const;
 public:
     XmlTree();
-    XmlTree(const XmlElement& root);
     XmlTree(const XmlTree&) = delete;
     XmlTree& operator=(const XmlTree&) = delete;
     ~XmlTree();
