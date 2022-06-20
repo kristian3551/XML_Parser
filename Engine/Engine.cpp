@@ -50,7 +50,7 @@ void Engine::saveFile() {
 }
 void Engine::saveAs(const String& filePath) {
     tree.saveInFile(filePath);
-    cout << "Successfully saved file in " << parser.getFilePath() << endl;
+    cout << "Successfully saved file in " << filePath << endl;
     hasChanged = false;
 }
 void Engine::help() {
@@ -69,7 +69,7 @@ void Engine::help() {
     cout << "  text <id>                          \t\t\tprints text of element with <id>" << endl;
     cout << "  settext <id>                       \t\t\tsets textContent of element with <id> to <newText>" << endl;
     cout << "  delete <id> <key>                  \t\t\tremoves attribute <key> from element with <id>" << endl;
-    cout << "  addchild <id> <type>               \t\t\tcreates child element if <type> to element <id>" << endl;
+    cout << "  newchild <id> <type>               \t\t\tcreates child element if <type> to element <id>\n                               \t\t\t\t\tPS: When adding element to an empty file\n                               \t\t\t\t\tyou should use 'rootId' as parent ID" << endl;
     cout << "  remove <id>                        \t\t\tremoves element with <id>" << endl;
     cout << "  xpath <xmlPath>                    \t\t\tperforms basic XPath requests" << endl;
     cout << "  setid <oldId> <newId>              \t\t\tsets id of <oldId> element to <newId>" << endl;
@@ -155,12 +155,17 @@ void Engine::setText(const String& id) {
         cout << str << endl;
     }
 }
-void Engine::setId(const String& oldId, const String& newId) {
+void Engine::setId(const String& oldId) {
+    cout << "> Enter new ID: ";
+    String newId;
+    cin >> newId;
     try {
+        if(newId.isEmpty() | newId.split(" ").isEmpty())
+            throw String("Invalid ID");
         if(tree.hasElementWithId(newId)) 
             throw String("There is an element with the same ID.");
         tree.setId(oldId, newId);
-        cout << "Successfully changed ID of element " << oldId << " to " << newId << endl;
+        cout << "Successfully changed ID of element " << oldId << " to '" << newId << "'" << endl;
     }
     catch(const String& str) {
         cout << str << endl;
@@ -235,9 +240,9 @@ void Engine::run() {
     while(input != END_OF_PROGRAM) {
         cout << "> ";
         cin >> input;
+    try {
         ArrayList<String> parts = input.split(" ");
         String command = parts[0];
-    try {
         if(command.equals("open")) {
             openFile(input.substring(parts[0].getLength() + 1));
         }
@@ -300,7 +305,7 @@ void Engine::run() {
             if(fileIsOpened()) printDescendants(parts[1]);
         }
         else if(command.equals("setid")) {
-            if(fileIsOpened()) setId(parts[1], parts[2]);
+            if(fileIsOpened()) setId(parts[1]);
         }
         else {
             cout << "Wrong command. Type 'help' to learn more." << endl;
