@@ -70,7 +70,6 @@ void Engine::help() {
     cout << "  settext <id>                       \t\t\tsets textContent of element with <id> to <newText>" << endl;
     cout << "  delete <id> <key>                  \t\t\tremoves attribute <key> from element with <id>" << endl;
     cout << "  addchild <id> <type>               \t\t\tcreates child element if <type> to element <id>" << endl;
-    cout << "  removechild <parentId> <childId>   \t\t\tremoves element with <childId> given <parentId>" << endl;
     cout << "  remove <id>                        \t\t\tremoves element with <id>" << endl;
     cout << "  xpath <xmlPath>                    \t\t\tperforms basic XPath requests" << endl;
     cout << "  setid <oldId> <newId>              \t\t\tsets id of <oldId> element to <newId>" << endl;
@@ -298,10 +297,10 @@ void Engine::run() {
         }
         
         else if(command.equals("descendants")) {
-            printDescendants(parts[1]);
+            if(fileIsOpened()) printDescendants(parts[1]);
         }
         else if(command.equals("setid")) {
-            setId(parts[1], parts[2]);
+            if(fileIsOpened()) setId(parts[1], parts[2]);
         }
         else {
             cout << "Wrong command. Type 'help' to learn more." << endl;

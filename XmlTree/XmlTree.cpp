@@ -73,6 +73,8 @@ void XmlTree::setId(const String& oldId, const String& newId) {
     if(el == nullptr) 
         throw String("There is no such element");
     el->setId(newId);
+    ids.add(newId, ids.find(oldId));
+    ids.remove(oldId);
 }
 void XmlTree::printChildren(const String& id) const {
     const XmlElement* el = getElementById(id, root);
