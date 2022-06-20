@@ -16,12 +16,14 @@ public:
     XmlTree& operator=(const XmlTree&) = delete;
     ~XmlTree();
     const XmlElement* getRoot() const;
+    bool hasElementWithId(const String& id) const;
     void saveInFile(const String& filePath) const;
     void print() const;
     bool printAttribute(const String& id, const String& key) const;
     void setAttribute(const String& id,
     const String& key, const String& value);
     void setText(const String& id, const String& textContent);
+    void setId(const String& oldId, const String& newId);
     void printChildren(const String& id) const;
     const XmlElement* getChildByIndex(const String& id, int index) const;
     const XmlElement* getLastChild(const String& id) const;

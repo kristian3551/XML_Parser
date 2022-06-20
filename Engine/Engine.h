@@ -24,6 +24,7 @@ class Engine {
     void printChildByIndex(const String& id, int index);
     void printText(const String& id);
     void setText(const String& id);
+    void setId(const String& oldId, const String& newId);
     void removeAttribute(const String& id, const String& key);
     void addChild(const String& id, const String& type);
     void remove(const String& id);

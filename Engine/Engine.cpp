@@ -73,7 +73,7 @@ void Engine::help() {
     cout << "  removechild <parentId> <childId>   \t\t\tremoves element with <childId> given <parentId>" << endl;
     cout << "  remove <id>                        \t\t\tremoves element with <id>" << endl;
     cout << "  xpath <xmlPath>                    \t\t\tperforms basic XPath requests" << endl;
-    
+    cout << "  setid <oldId> <newId>              \t\t\tsets id of <oldId> element to <newId>" << endl;
 }
 bool Engine::exit() {
     if(parser.getFilePath() != String() && hasChanged) {
@@ -155,6 +155,18 @@ void Engine::setText(const String& id) {
     catch(const String& str) {
         cout << str << endl;
     }
+}
+void Engine::setId(const String& oldId, const String& newId) {
+    try {
+        if(tree.hasElementWithId(newId)) 
+            throw String("There is an element with the same ID.");
+        tree.setId(oldId, newId);
+        cout << "Successfully changed ID of element " << oldId << " to " << newId << endl;
+    }
+    catch(const String& str) {
+        cout << str << endl;
+    }
+    
 }
 void Engine::removeAttribute(const String& id, const String& key) {
     try {
@@ -287,6 +299,9 @@ void Engine::run() {
         
         else if(command.equals("descendants")) {
             printDescendants(parts[1]);
+        }
+        else if(command.equals("setid")) {
+            setId(parts[1], parts[2]);
         }
         else {
             cout << "Wrong command. Type 'help' to learn more." << endl;

@@ -13,6 +13,10 @@ const XmlElement* XmlTree::getRoot() const {
     return root;
 }
 
+bool XmlTree::hasElementWithId(const String& id) const {
+    return ids.hasKey(id);
+}
+
 void XmlTree::saveInFile(const String& filePath) const {
     ofstream file(filePath.toString());
     for(int i = 0; i < root->getChildren().getSize(); i++) {
@@ -63,6 +67,12 @@ void XmlTree::setText(const String& id, const String& textContent) {
     if(el == nullptr) 
         throw String("There is no such element");
     el->setTextContent(textContent);
+}
+void XmlTree::setId(const String& oldId, const String& newId) {
+    XmlElement* el = getElementById(oldId, root);
+    if(el == nullptr) 
+        throw String("There is no such element");
+    el->setId(newId);
 }
 void XmlTree::printChildren(const String& id) const {
     const XmlElement* el = getElementById(id, root);
